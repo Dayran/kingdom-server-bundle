@@ -1,0 +1,35 @@
+Kori\KingdomServerBundle\Entity\Avatar:
+  type: entity
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    hairColor:
+      type: integer
+    beard:
+      type: integer
+      nullable: true
+    ears:
+      type: integer
+    eyes:
+      type: integer
+    eyebrows:
+      type: integer
+    hairStyle:
+      type: integer
+    mouth:
+      type: integer
+    nose:
+      type: integer
+    female:
+      type: boolean
+ oneToOne:
+    account:
+      targetEntity: Account
+      inversedBy: avatar
+      joinColumn:
+        name: account_id
+        referencedColumnName: id
+

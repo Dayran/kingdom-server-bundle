@@ -28,15 +28,22 @@ namespace Kori\KingdomServerBundle\Service;
 
 
 use Doctrine\ORM\EntityManager;
+use Kori\KingdomServerBundle\Activity\ActivityInterface;
 use Kori\KingdomServerBundle\Entity\Account;
 use Kori\KingdomServerBundle\Entity\Avatar;
+use Kori\KingdomServerBundle\Entity\Bans;
+use Kori\KingdomServerBundle\Entity\BattleLog;
 use Kori\KingdomServerBundle\Entity\BuildingLevel;
 use Kori\KingdomServerBundle\Entity\Consumable;
 use Kori\KingdomServerBundle\Entity\ConsumablesEffect;
 use Kori\KingdomServerBundle\Entity\Field;
+use Kori\KingdomServerBundle\Entity\Message;
 use Kori\KingdomServerBundle\Entity\Race;
 use Kori\KingdomServerBundle\Entity\ServerStats;
 use Kori\KingdomServerBundle\Entity\Town;
+use Kori\KingdomServerBundle\Repository\AccountRepository;
+use Kori\KingdomServerBundle\Repository\FieldRepository;
+use Kori\KingdomServerBundle\Repository\MessageRepository;
 use Kori\KingdomServerBundle\Rules\AttackRuleInterface;
 use Kori\KingdomServerBundle\Rules\BuildRuleInterface;
 
@@ -107,6 +114,44 @@ final class Server
     }
 
     /**
+     * @param Account $account
+     * @param string $ip
+     * @return bool
+     */
+    public function isBanned(Account $account, string $ip): bool
+    {
+        $qb = $this->getEntityManager()->createQuery(
+            sprintf("SELECT count(b) from %s b where (b.TYPE = '%s' and b.value = '%s') or (b.TYPE = '%s' and b.VALUE = '%s')",
+            Bans::class,
+            Bans::ACCOUNT, $account->getId(),
+                Bans::IP, $ip
+            )
+        );
+        return $qb->getSingleScalarResult() > 0;
+    }
+
+    /**
+     * @param Account $account
+     * @param string $ip
+     */
+    public function ban(Account $account, string $ip = '')
+    {
+        $ban = new Bans();
+        $ban->setType(Bans::ACCOUNT);
+        $ban->setValue($account->getId());
+        $this->getEntityManager()->persist($ban);
+
+        if($ip !== '') {
+            $ban = new Bans();
+            $ban->setType(Bans::IP);
+            $ban->setValue($ip);
+            $this->getEntityManager()->persist($ban);
+        }
+
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * @param array $buildRules
      * @return void
      */
@@ -142,19 +187,29 @@ final class Server
     }
 
     /**
-     * @param string $name
-     * @return Account
+     * @return AccountRepository
      */
-    public function createAccount(string $name): Account
+    public function getAccountManager(): AccountRepository
     {
-        $account = new Account();
-        $account->setName($name);
-        $account->setProtection( strtotime("+".$this->protectionDays."days"));
+        $repository = $this->getEntityManager()->getRepository(Account::class);
+        $repository->setProtectionPeriod($this->protectionDays);
+        return $repository;
+    }
 
-        $this->em->persist($account);
-        $this->em->flush();
+    /**
+     * @return FieldRepository
+     */
+    public function getFieldManager(): FieldRepository
+    {
+        return $this->getEntityManager()->getRepository(Field::class);
+    }
 
-        return $account;
+    /**
+     * @return MessageRepository
+     */
+    public function getMessageManager(): MessageRepository
+    {
+        return $this->getEntityManager()->getRepository(Message::class);
     }
 
     /**
@@ -166,32 +221,12 @@ final class Server
         return $this->getEntityManager()->getRepository(ServerStats::class)->findOneBy(['name' => $name]);
     }
 
-
     /**
      * @return array
      */
     public function getRaces(): array
     {
-        return $this->em->getRepository(Race::class)->findAll();
-    }
-
-
-    /**
-     * @param int|null $typeFilter
-     * @return int
-     */
-    public function getFieldsCount(int $typeFilter = null): int
-    {
-        return $this->em->getRepository(Field::class)->totalCount($typeFilter);
-    }
-
-    /**
-     * @param int|null $typeFilter
-     * @return array
-     */
-    public function getFields(int $typeFilter = null): array
-    {
-        return is_null($typeFilter)? $this->em->getRepository(Field::class)->findAll() : $this->em->getRepository(Field::class)->findBy(["type" => $typeFilter]);
+        return $this->getEntityManager()->getRepository(Race::class)->findAll();
     }
 
     /**
@@ -217,11 +252,78 @@ final class Server
         $consumable->getEffects()->filter(function (ConsumablesEffect $effect) use($avatar) {
             $this->effectManager->process($avatar, $effect->getType(), $effect->getValue());
         });
-        $this->em->persist($avatar);
-        $this->em->flush();
+        $this->getEntityManager()->persist($avatar);
+        $this->getEntityManager()->flush();
 
         return true;
     }
 
+    /**
+     * @param Town $attacker
+     * @param Town $defender
+     * @param int $type
+     * @param array $units
+     * @param bool $sendAvatar
+     */
+    public function battle(Town $attacker, Town $defender, int $type, array $units, bool $sendAvatar = false)
+    {
+        $log = new BattleLog();
+        $log->setAttackTown($attacker);
+        $log->setDefendTown($defender);
+        $log->setType($type);
+
+        foreach ($units as $unit)
+        {
+            //@todo calculate strength
+        }
+
+        //@todo remove units from attacker
+        //@todo if sending avatar set avatar to be away
+        //$attacker->getAccount()->getAvatar()->setBattleLog($log);
+        //$this->em->persist($log);
+        //$this->em->flush();
+    }
+
+    /**
+     * Process unprocessed battles server wide
+     */
+    public function processBattles()
+    {
+        $query = $this->getEntityManager()->createQuery(sprintf("SELECT b from %s b where b.proccessed is FALSE and b.eta <= %d", BattleLog::class, time()));
+        foreach($query->getResult() as $result)
+        {
+            $this->attackRule->finalize($result);
+        }
+    }
+
+    /**
+     * @param Town $town
+     */
+    public function tick(Town $town)
+    {
+        $rates = $town->getGenerateRate();
+        $diff = time() - $town->getLastTick();
+        //@todo get modifiers
+        $town->setLastTick(time());
+        //$this->em->persist($town);
+        //$this->em->flush();
+
+        //@todo handle battles
+    }
+
+    /**
+     * @param ActivityInterface $activity
+     * @return bool
+     */
+    public function canTrigger(ActivityInterface $activity) : bool
+    {
+        $upTime = time() - $this->getStatus(ServerStats::CREATED_AT)->getValue();
+        if($activity->isRepeated())
+        {
+            return $upTime % $activity->getSchedule() === 0;
+        } else {
+            return $activity->getSchedule() >= $upTime;
+        }
+    }
 
 }

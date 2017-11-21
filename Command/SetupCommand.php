@@ -39,6 +39,10 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
+/**
+ * Class SetupCommand
+ * @package Kori\KingdomServerBundle\Command
+ */
 class SetupCommand extends ContainerAwareCommand
 {
 
@@ -112,6 +116,9 @@ class SetupCommand extends ContainerAwareCommand
         return 0;
     }
 
+    /**
+     * @param Server $server
+     */
     protected function overrideServer(Server $server)
     {
         $metaData = $server->getEntityManager()->getMetadataFactory()->getAllMetadata();

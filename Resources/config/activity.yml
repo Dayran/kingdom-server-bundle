@@ -1,0 +1,5 @@
+services:
+  Kori\KingdomServerBundle\Activity\Standard\:
+    resource: '../../Activity/Standard/*'
+    tags:
+      - { name: kori_kingdom.activity }

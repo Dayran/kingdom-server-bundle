@@ -24,30 +24,45 @@
  *
  */
 
-namespace Kori\KingdomServerBundle\Activity;
+namespace Kori\KingdomServerBundle\Repository;
 
 
-use Kori\KingdomServerBundle\Service\Server;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Doctrine\ORM\EntityRepository;
+use Kori\KingdomServerBundle\Entity\Account;
+use Kori\KingdomServerBundle\Entity\Avatar;
 
-interface ActivityInterface extends ContainerAwareInterface
+/**
+ * Class AccountRepository
+ * @package Kori\KingdomServerBundle\Repository
+ */
+class AccountRepository extends EntityRepository
 {
-    /**
-     * Time period to run in seconds
-     *
-     * @return int
-     */
-    public function getSchedule(): int;
 
     /**
-     * Set if event is repeatable
-     * @return bool
+     * @var int
      */
-    public function isRepeated(): bool;
+    protected $protectionPeriod;
 
     /**
-     * @param Server $server
+     * @param int $protectionPeriod
      */
-    public function trigger(Server $server): void;
+    public function setProtectionPeriod(int $protectionPeriod)
+    {
+        $this->protectionPeriod = $protectionPeriod;
+    }
 
+    public function create(string $name, Avatar $avatar): Account
+    {
+        $account = new Account();
+        $account->setName($name);
+        $account->setProtection( strtotime("+".$this->protectionPeriod."days"));
+        $this->getEntityManager()->persist($account);
+
+        $avatar->setAccount($account);
+        $this->getEntityManager()->persist($avatar);
+
+        $this->getEntityManager()->flush();
+
+        return $account;
+    }
 }

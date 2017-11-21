@@ -28,6 +28,10 @@ namespace Kori\KingdomServerBundle\Service;
 
 use Kori\KingdomServerBundle\Generator\GeneratorInterface;
 
+/**
+ * Class GeneratorManager
+ * @package Kori\KingdomServerBundle\Service
+ */
 final class GeneratorManager
 {
     /**

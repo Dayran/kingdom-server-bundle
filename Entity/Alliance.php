@@ -26,31 +26,47 @@
 
 namespace Kori\KingdomServerBundle\Entity;
 
-
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Kori\KingdomServerBundle\Traits\CreatedAt;
 
-class Kingdom
+/**
+ * Class Alliance
+ * @package Kori\KingdomServerBundle\Entity
+ */
+class Alliance
 {
+
+    use CreatedAt;
+
     /**
      * @var int
      */
     protected $id;
 
     /**
-     * @var Account
+     * @var string
      */
-    protected $king;
+    protected $name;
 
     /**
      * @var Collection
      */
-    protected $governors;
+    protected $kingdoms;
 
     /**
      * @var Collection
      */
-    protected $fields;
+    protected $kings;
+
+    /**
+     * @var Collection
+     */
+    protected $dukes;
+
+    /**
+     * @var boolean
+     */
+    protected $secret;
 
     /**
      * @return int
@@ -61,59 +77,83 @@ class Kingdom
     }
 
     /**
-     * @return Account
+     * @return string
      */
-    public function getKing(): Account
+    public function getName(): string
     {
-        return $this->king;
+        return $this->name;
     }
 
     /**
-     * @param Account $king
+     * @param string $name
      */
-    public function setKing(Account $king)
+    public function setName(string $name)
     {
-        $this->king = $king;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getGovernors(): Collection
-    {
-        return $this->governors?: $this->governors = new ArrayCollection();
-    }
-
-    /**
-     * @param Collection $governors
-     */
-    public function setGovernors(Collection $governors)
-    {
-        $this->governors = $governors;
+        $this->name = $name;
     }
 
     /**
      * @return Collection
      */
-    public function getFields(): Collection
+    public function getKingdoms(): Collection
     {
-        return $this->fields?: $this->fields = new ArrayCollection();
+        return $this->kingdoms;
     }
 
     /**
-     * @param Collection $fields
+     * @param Collection $kingdoms
      */
-    public function setFields(Collection $fields)
+    public function setKingdoms(Collection $kingdoms)
     {
-        $this->fields = $fields;
+        $this->kingdoms = $kingdoms;
     }
 
-    public function onPostLoad()
+    /**
+     * @return Collection
+     */
+    public function getKings(): Collection
     {
-        //To remove king from governor collection
-        if($this->getGovernors()->contains($this->getKing()))
-            $this->getGovernors()->remove($this->getKing());
+        return $this->kings;
     }
 
+    /**
+     * @param Collection $kings
+     */
+    public function setKings(Collection $kings)
+    {
+        $this->kings = $kings;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getDukes(): Collection
+    {
+        return $this->dukes;
+    }
+
+    /**
+     * @param Collection $dukes
+     */
+    public function setDukes(Collection $dukes)
+    {
+        $this->dukes = $dukes;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSecret(): bool
+    {
+        return $this->secret;
+    }
+
+    /**
+     * @param bool $secret
+     */
+    public function setSecret(bool $secret)
+    {
+        $this->secret = $secret;
+    }
 
 }

@@ -69,6 +69,11 @@ class Account
     protected $premiumEnd = 0;
 
     /**
+     * @var Avatar
+     */
+    protected $avatar;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -178,6 +183,22 @@ class Account
     public function isPremium(): bool
     {
         return $this->getPremiumEnd() > time();
+    }
+
+    /**
+     * @return Avatar
+     */
+    public function getAvatar(): Avatar
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param Avatar $avatar
+     */
+    public function setAvatar(Avatar $avatar)
+    {
+        $this->avatar = $avatar;
     }
 
 }

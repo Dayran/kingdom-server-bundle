@@ -1,0 +1,33 @@
+Kori\KingdomServerBundle\Entity\BuildingLevel:
+  type: entity
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    culture:
+      type: integer
+    level:
+      type: integer
+    positionLimit:
+      type: integer
+    generateClay:
+      type: integer
+    generateWood:
+      type: integer
+    generateWheat:
+      type: integer
+    generateIron:
+      type: integer
+    merchants:
+      type: integer
+  manyToOne:
+    buildingType:
+      targetEntity: BuildingType
+      inversedBy: levels
+      joinColumn:
+        name: type_id
+        referencedColumnName: id
+
+

@@ -26,31 +26,56 @@
 
 namespace Kori\KingdomServerBundle\Repository;
 
-
 use Doctrine\ORM\EntityRepository;
+use Kori\KingdomServerBundle\Entity\Account;
+use Kori\KingdomServerBundle\Entity\Message;
 
 /**
- * Class FieldRepository
+ * Class ChatRepository
  * @package Kori\KingdomServerBundle\Repository
  */
-class FieldRepository extends EntityRepository
+class MessageRepository extends EntityRepository
 {
-    public function totalCount(int $typeFilter = null): int
+
+    /**
+     * @param Account $to
+     * @param Account $from
+     * @param string $subject
+     * @param string $message
+     * @return Message
+     */
+    public function message(Account $to, Account $from, string $subject, string $message): Message
     {
-        return $this->getEntityManager()
-            ->createQuery(
-                'SELECT COUNT(f) FROM KoriKingdomServerBundle:Field f'. is_null($typeFilter)? '' : ' where f.type = '.$typeFilter
-            )
-            ->getSingleScalarResult();
+        $object = new Message();
+        $object->setSender($from);
+        $object->setRecipient($to);
+        $object->setSubject($subject);
+        $object->setMessage($message);
+        $object->getCreatedAt();
+        $this->getEntityManager()->persist($object);
+        $this->getEntityManager()->flush();
+
+        return $object;
     }
 
     /**
-     * @param int|null $typeFilter
+     * @param Account $account
      * @return array
      */
-    public function getFields(int $typeFilter = null): array
+    public function getMessages(Account $account): array
     {
-        return is_null($typeFilter)? $this->findAll() : $this->findBy(["type" => $typeFilter]);
+        $qb = $this->createQueryBuilder('m');
+        $qb->where('m.recipient = ?1');
+        $qb->setParameter(1, $account);
+        return $qb->getQuery()->getArrayResult();
     }
 
+    /**
+     * @param Message $message
+     */
+    public function deleteMessage(Message $message)
+    {
+        $this->getEntityManager()->remove($message);
+        $this->getEntityManager()->flush();
+    }
 }

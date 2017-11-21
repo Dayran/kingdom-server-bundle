@@ -24,30 +24,31 @@
  *
  */
 
-namespace Kori\KingdomServerBundle\Activity;
+namespace Kori\KingdomServerBundle\Activity\Standard;
 
-
+use Kori\KingdomServerBundle\Activity\Activity;
 use Kori\KingdomServerBundle\Service\Server;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
-interface ActivityInterface extends ContainerAwareInterface
+/**
+ * Class ProcessBattle
+ * @package Kori\KingdomServerBundle\Activity\Standard
+ */
+class ProcessBattle extends Activity
 {
-    /**
-     * Time period to run in seconds
-     *
-     * @return int
-     */
-    public function getSchedule(): int;
 
-    /**
-     * Set if event is repeatable
-     * @return bool
-     */
-    public function isRepeated(): bool;
+    public function getSchedule(): int
+    {
+        return 10;
+    }
 
-    /**
-     * @param Server $server
-     */
-    public function trigger(Server $server): void;
+    public function isRepeated(): bool
+    {
+        return true;
+    }
+
+    public function trigger(Server $server): void
+    {
+        $server->processBattles();
+    }
 
 }

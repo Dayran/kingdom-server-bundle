@@ -27,7 +27,10 @@
 namespace Kori\KingdomServerBundle;
 
 
+use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddActivityCompilerPass;
+use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddAttackRuleCompilerPass;
 use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddBuildRuleCompilerPass;
+use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddEffectRuleCompilerPass;
 use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddGeneratorCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
@@ -41,5 +44,8 @@ class KoriKingdomServerBundle extends Bundle
     {
         $container->addCompilerPass(new AddGeneratorCompilerPass());
         $container->addCompilerPass(new AddBuildRuleCompilerPass());
+        $container->addCompilerPass(new AddAttackRuleCompilerPass());
+        $container->addCompilerPass(new AddActivityCompilerPass());
+        $container->addCompilerPass(new AddEffectRuleCompilerPass());
     }
 }

@@ -26,12 +26,16 @@
 
 namespace Kori\KingdomServerBundle\Entity;
 
+use Kori\KingdomServerBundle\Traits\CreatedAt;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
-class Kingdom
+/**
+ * Class Message
+ * @package Kori\KingdomServerBundle\Entity
+ */
+class Message
 {
+    use CreatedAt;
+
     /**
      * @var int
      */
@@ -40,17 +44,27 @@ class Kingdom
     /**
      * @var Account
      */
-    protected $king;
+    protected $sender;
 
     /**
-     * @var Collection
+     * @var Account
      */
-    protected $governors;
+    protected $recipient;
 
     /**
-     * @var Collection
+     * @var string
      */
-    protected $fields;
+    protected $subject;
+
+    /**
+     * @var string
+     */
+    protected $message;
+
+    /**
+     * @var Message
+     */
+    protected $reply;
 
     /**
      * @return int
@@ -63,57 +77,81 @@ class Kingdom
     /**
      * @return Account
      */
-    public function getKing(): Account
+    public function getSender(): Account
     {
-        return $this->king;
+        return $this->sender;
     }
 
     /**
-     * @param Account $king
+     * @param Account $sender
      */
-    public function setKing(Account $king)
+    public function setSender(Account $sender)
     {
-        $this->king = $king;
+        $this->sender = $sender;
     }
 
     /**
-     * @return Collection
+     * @return Account
      */
-    public function getGovernors(): Collection
+    public function getRecipient(): Account
     {
-        return $this->governors?: $this->governors = new ArrayCollection();
+        return $this->recipient;
     }
 
     /**
-     * @param Collection $governors
+     * @param Account $recipient
      */
-    public function setGovernors(Collection $governors)
+    public function setRecipient(Account $recipient)
     {
-        $this->governors = $governors;
+        $this->recipient = $recipient;
     }
 
     /**
-     * @return Collection
+     * @return string
      */
-    public function getFields(): Collection
+    public function getSubject(): string
     {
-        return $this->fields?: $this->fields = new ArrayCollection();
+        return $this->subject;
     }
 
     /**
-     * @param Collection $fields
+     * @param string $subject
      */
-    public function setFields(Collection $fields)
+    public function setSubject(string $subject)
     {
-        $this->fields = $fields;
+        $this->subject = $subject;
     }
 
-    public function onPostLoad()
+    /**
+     * @return string
+     */
+    public function getMessage(): string
     {
-        //To remove king from governor collection
-        if($this->getGovernors()->contains($this->getKing()))
-            $this->getGovernors()->remove($this->getKing());
+        return $this->message;
     }
 
+    /**
+     * @param string $message
+     */
+    public function setMessage(string $message)
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * @return Message
+     */
+    public function getReply(): Message
+    {
+        return $this->reply;
+    }
+
+    /**
+     * @param Message $reply
+     */
+    public function setReply(Message $reply)
+    {
+        $this->reply = $reply;
+    }
 
 }

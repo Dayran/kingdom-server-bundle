@@ -8,6 +8,11 @@ Purely a hobby project.
 
 > Does not contain any client nor will i support client development
 
+## Important notes
+
+The accounts in this bundle is Game Account, please develop your own user/lobby account or use any other 3rd party symfony user bundle (eg. FOS User);
+
+Because there is no lobby account logic in this bundle there will be no sitter/dual logic in this bundle  
 
 ## Feature List
 
@@ -16,12 +21,13 @@ Purely a hobby project.
     - [x] Command
  * Server
     - [x] Multiple server listening on different domain
+    - [x] Game Accounts 
     - [x] Server rules
         - [x] Build rule
         - [X] Attack rule
         - [x] Effect rule
-    - [ ] Events
-    - [ ] Chat
+    - [x] Events
+    - [x] Chat
     - [ ] Building
     - [ ] Attack
     - [ ] Quest
@@ -186,3 +192,36 @@ services:
 ```
 
 > All effect rule must implement the EffectRuleInterface
+
+
+### Events/Activity
+
+Load the standard activities by adding the following to the services.yml
+
+```yaml
+imports:
+    - { resource: "@KoriKingdomServerBundle/Resources/config/activity.yml" }
+```
+
+To register an activity add the tag name "kori_kingdom.activity" to the service
+
+```yaml
+#Example
+services:
+  Kori\KingdomServerBundle\Activity\Standard\:
+    resource: '../../Activity/Standard/*'
+    tags:
+      - { name: kori_kingdom.activity }
+```
+
+> All activity must extend Activity
+
+To set a repeating event, set repeatable to true and schedule to the time interval.
+
+Example:
+
+| Repeatable | Schedule  | Result                                        |
+|:----------:|:---------:| --------------------------------------------- |
+| Yes        | 10        | Run every 10 seconds                          |
+| No         | 5000      | Run after 5000 seconds the server is created  |
+

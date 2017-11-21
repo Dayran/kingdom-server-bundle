@@ -32,6 +32,10 @@ use Doctrine\Common\Collections\Collection;
 use Kori\KingdomServerBundle\Entity\Avatar;
 use Kori\KingdomServerBundle\Rules\EffectRuleInterface;
 
+/**
+ * Class EffectManager
+ * @package Kori\KingdomServerBundle\Service
+ */
 final class EffectManager
 {
     /**

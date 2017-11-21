@@ -33,6 +33,11 @@ namespace Kori\KingdomServerBundle\Entity;
  */
 class Avatar
 {
+    const ALL = 0;
+    const WOOD = 1;
+    const IRON = 2;
+    const CLAY = 3;
+    const WHEAT = 4;
 
     /**
      * @var int
@@ -82,7 +87,7 @@ class Avatar
     /**
      * @var boolean
      */
-    protected $isFemale;
+    protected $female;
 
     /**
      * @var Account
@@ -103,6 +108,46 @@ class Avatar
      * @var int
      */
     protected $maxHealth;
+
+    /**
+     * @var int
+     */
+    protected $fightingStrength;
+
+    /**
+     * @var int
+     */
+    protected $offBonus;
+
+    /**
+     * @var int
+     */
+    protected $defBonus;
+
+    /**
+     * @var int
+     */
+    protected $resourceBonus;
+
+    /**
+     * @var int
+     */
+    protected $resourceType;
+
+    /**
+     * @var int
+     */
+    protected $level;
+
+    /**
+     * @var int
+     */
+    protected $exp;
+
+    /**
+     * @var Town
+     */
+    protected $town;
 
     /**
      * @return int
@@ -246,15 +291,15 @@ class Avatar
      */
     public function isFemale(): bool
     {
-        return $this->isFemale;
+        return $this->female;
     }
 
     /**
-     * @param bool $isFemale
+     * @param bool $female
      */
-    public function setIsFemale(bool $isFemale)
+    public function setFemale(bool $female)
     {
-        $this->isFemale = $isFemale;
+        $this->female = $female;
     }
 
     /**
@@ -327,6 +372,134 @@ class Avatar
     public function setMaxHealth(int $maxHealth)
     {
         $this->maxHealth = $maxHealth;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFightingStrength(): int
+    {
+        return $this->fightingStrength;
+    }
+
+    /**
+     * @param int $fightingStrength
+     */
+    public function setFightingStrength(int $fightingStrength)
+    {
+        $this->fightingStrength = $fightingStrength;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffBonus(): int
+    {
+        return $this->offBonus;
+    }
+
+    /**
+     * @param int $offBonus
+     */
+    public function setOffBonus(int $offBonus)
+    {
+        $this->offBonus = $offBonus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefBonus(): int
+    {
+        return $this->defBonus;
+    }
+
+    /**
+     * @param int $defBonus
+     */
+    public function setDefBonus(int $defBonus)
+    {
+        $this->defBonus = $defBonus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param int $level
+     */
+    public function setLevel(int $level)
+    {
+        $this->level = $level;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExp(): int
+    {
+        return $this->exp;
+    }
+
+    /**
+     * @param int $exp
+     */
+    public function setExp(int $exp)
+    {
+        $this->exp = $exp;
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceBonus(): int
+    {
+        return $this->resourceBonus;
+    }
+
+    /**
+     * @param int $resourceBonus
+     */
+    public function setResourceBonus(int $resourceBonus)
+    {
+        $this->resourceBonus = $resourceBonus;
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceType(): int
+    {
+        return $this->resourceType;
+    }
+
+    /**
+     * @param int $resourceType
+     */
+    public function setResourceType(int $resourceType)
+    {
+        $this->resourceType = $resourceType;
+    }
+
+    /**
+     * @return Town
+     */
+    public function getTown(): Town
+    {
+        return $this->town;
+    }
+
+    /**
+     * @param Town $town
+     */
+    public function setTown(Town $town)
+    {
+        $this->town = $town;
     }
 
 }

@@ -24,30 +24,32 @@
  *
  */
 
-namespace Kori\KingdomServerBundle\Activity;
+namespace Kori\KingdomServerBundle\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-use Kori\KingdomServerBundle\Service\Server;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-
-interface ActivityInterface extends ContainerAwareInterface
+/**
+ * Class AddActivityCompilerPass
+ * @package Kori\KingdomServerBundle\DependencyInjection\Compiler
+ */
+class AddActivityCompilerPass implements CompilerPassInterface
 {
-    /**
-     * Time period to run in seconds
-     *
-     * @return int
-     */
-    public function getSchedule(): int;
 
     /**
-     * Set if event is repeatable
-     * @return bool
+     * {@inheritdoc}
      */
-    public function isRepeated(): bool;
+    public function process(ContainerBuilder $container)
+    {
+        $manger = $container->getDefinition('kori_kingdom.activity_manager');
 
-    /**
-     * @param Server $server
-     */
-    public function trigger(Server $server): void;
+        foreach ($container->findTaggedServiceIds('kori_kingdom.activity') as $name => $option) {
 
+            $definition = $container->getDefinition($name);
+            $definition->addMethodCall("setContainer", $container);
+
+            if (!$manger->addMethodCall('addActivity', [$definition]))
+                @trigger_error("The attack rule is already registered in the system");
+        }
+    }
 }

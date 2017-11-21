@@ -1,0 +1,15 @@
+Kori\KingdomServerBundle\Entity\ActivityLog:
+  type: entity
+  repositoryClass: Kori\KingdomServerBundle\Repository\FieldRepository
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    activity:
+      type: string
+    createdAt:
+      type: integer
+      options:
+        unsigned: true

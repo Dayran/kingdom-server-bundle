@@ -1,5 +1,6 @@
 Kori\KingdomServerBundle\Entity\Account:
   type: entity
+  repositoryClass: Kori\KingdomServerBundle\Repository\AccountRepository
   id:
     id:
       type: integer
@@ -22,6 +23,10 @@ Kori\KingdomServerBundle\Entity\Account:
       options:
         unsigned: true
         default: 0
+  oneToOne:
+    avatar:
+      targetEntity: Avatar
+      mappedBy: account
   manyToOne:
     kingdom:
       targetEntity: Kingdom

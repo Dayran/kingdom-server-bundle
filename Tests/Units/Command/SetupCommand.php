@@ -28,6 +28,7 @@ namespace Kori\KingdomServerBundle\Tests\Units\Command;
 
 use atoum\test;
 use Kori\KingdomServerBundle\Command\SetupCommand as TestedCommand;
+use Kori\KingdomServerBundle\Entity\ServerStats;
 use Kori\KingdomServerBundle\Service\EffectManager;
 use Kori\KingdomServerBundle\Service\GeneratorManager;
 use Kori\KingdomServerBundle\Service\RuleManager;
@@ -168,6 +169,20 @@ class SetupCommand extends test
             ));
         } catch (\Exception $exception) {
             $this->exception($exception)->hasMessage("Units generator not found.");
+        }
+
+        $this->calling($repository)->findOneBy = function() {
+            return new ServerStats();
+        };
+
+        try {
+            //generator name is insensitive
+            $commandTester->execute(array('command' => $command->getName(),
+                "name" => "my_server",
+                '--generator' => ["SampleWorld", "race", "building", "technology", "unit"]
+            ));
+        } catch (\Exception $exception) {
+            $this->exception($exception)->hasMessage("Server is already populated.");
         }
 
     }

@@ -1,0 +1,16 @@
+Kori\KingdomServerBundle\Entity\BuildingType:
+  type: entity
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+    uniqueInBase:
+      type: boolean
+  oneToMany:
+    features:
+      targetEntity: BuildingLevel
+      mappedBy: buildingType

@@ -66,16 +66,17 @@ class SampleWorldGenerator implements GeneratorInterface
         }
 
         //Checks if total fields created is correct
-        $totalCreated = $server->getFieldsCount();
+        $fieldManager = $server->getFieldManager();
+        $totalCreated = $fieldManager->totalCount();
         if($totalCreated !== $totalExpected)
             return false;
         //Start adjusting percentage
 
         //There should be at least 10oasis
-        if($server->getFieldsCount(self::OASIS) / $totalCreated < 0.1)
+        if($fieldManager->totalCount(self::OASIS) / $totalCreated < 0.1)
         {
-            $missing = round($totalExpected * 0.1 - $server->getFieldsCount(self::OASIS));
-            $replace = array_rand($server->getFields(self::FIELD), $missing);
+            $missing = round($totalExpected * 0.1 - $fieldManager->totalCount(self::OASIS));
+            $replace = array_rand($fieldManager->getFields(self::FIELD), $missing);
             foreach($replace as $r)
             {
                 $r->setType(self::OASIS);

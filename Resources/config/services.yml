@@ -26,3 +26,7 @@ services:
   kori_kingdom.effect_manager:
     class: Kori\KingdomServerBundle\Service\EffectManager
     public: false
+  kori_kingdom.activity_manager:
+    class: Kori\KingdomServerBundle\Service\ActivityManager
+    public: true
+

@@ -26,31 +26,35 @@
 
 namespace Kori\KingdomServerBundle\Entity;
 
-
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
-class Kingdom
+/**
+ * Class Bans
+ * @package Kori\KingdomServerBundle\Entity
+ */
+class Bans
 {
+
+    const IP = "ip";
+    const ACCOUNT = "account";
+
     /**
      * @var int
      */
     protected $id;
 
     /**
-     * @var Account
+     * @var string
      */
-    protected $king;
+    protected $type;
 
     /**
-     * @var Collection
+     * @var string
      */
-    protected $governors;
+    protected $value;
 
     /**
-     * @var Collection
+     * @var int
      */
-    protected $fields;
+    protected $expiry;
 
     /**
      * @return int
@@ -61,59 +65,55 @@ class Kingdom
     }
 
     /**
-     * @return Account
+     * @return string
      */
-    public function getKing(): Account
+    public function getType(): string
     {
-        return $this->king;
+        return $this->type;
     }
 
     /**
-     * @param Account $king
+     * @param string $type
      */
-    public function setKing(Account $king)
+    public function setType(string $type)
     {
-        $this->king = $king;
+        if (!in_array($type, array(self::IP, self::ACCOUNT))) {
+            throw new \InvalidArgumentException("Invalid ban type");
+        }
+        $this->type = $type;
     }
 
     /**
-     * @return Collection
+     * @return string
      */
-    public function getGovernors(): Collection
+    public function getValue(): string
     {
-        return $this->governors?: $this->governors = new ArrayCollection();
+        return $this->value;
     }
 
     /**
-     * @param Collection $governors
+     * @param string $value
      */
-    public function setGovernors(Collection $governors)
+    public function setValue(string $value)
     {
-        $this->governors = $governors;
+        $this->value = $value;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getExpiry(): int
+    {
+        return $this->expiry;
     }
 
     /**
-     * @return Collection
+     * @param int $expiry
      */
-    public function getFields(): Collection
+    public function setExpiry(int $expiry)
     {
-        return $this->fields?: $this->fields = new ArrayCollection();
+        $this->expiry = $expiry;
     }
-
-    /**
-     * @param Collection $fields
-     */
-    public function setFields(Collection $fields)
-    {
-        $this->fields = $fields;
-    }
-
-    public function onPostLoad()
-    {
-        //To remove king from governor collection
-        if($this->getGovernors()->contains($this->getKing()))
-            $this->getGovernors()->remove($this->getKing());
-    }
-
 
 }

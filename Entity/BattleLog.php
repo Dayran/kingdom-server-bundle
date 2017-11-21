@@ -76,6 +76,166 @@ class BattleLog
      */
     protected $eta;
 
+    /**
+     * @var bool
+     */
+    protected $processed = false;
 
+    /**
+     * @var int
+     */
+    protected $type;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Town
+     */
+    public function getAttackTown(): Town
+    {
+        return $this->attackTown;
+    }
+
+    /**
+     * @param Town $attackTown
+     */
+    public function setAttackTown(Town $attackTown)
+    {
+        $this->attackTown = $attackTown;
+    }
+
+    /**
+     * @return Town
+     */
+    public function getDefendTown(): Town
+    {
+        return $this->defendTown;
+    }
+
+    /**
+     * @param Town $defendTown
+     */
+    public function setDefendTown(Town $defendTown)
+    {
+        $this->defendTown = $defendTown;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAttackUnits(): Collection
+    {
+        return $this->attackUnits;
+    }
+
+    /**
+     * @param Collection $attackUnits
+     */
+    public function setAttackUnits(Collection $attackUnits)
+    {
+        $this->attackUnits = $attackUnits;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAttackCalvaryStrength(): int
+    {
+        return $this->attackCalvaryStrength;
+    }
+
+    /**
+     * @param int $attackCalvaryStrength
+     */
+    public function setAttackCalvaryStrength(int $attackCalvaryStrength)
+    {
+        $this->attackCalvaryStrength = $attackCalvaryStrength;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAttackInfantryStrength(): int
+    {
+        return $this->attackInfantryStrength;
+    }
+
+    /**
+     * @param int $attackInfantryStrength
+     */
+    public function setAttackInfantryStrength(int $attackInfantryStrength)
+    {
+        $this->attackInfantryStrength = $attackInfantryStrength;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLootCapacity(): int
+    {
+        return $this->lootCapacity;
+    }
+
+    /**
+     * @param int $lootCapacity
+     */
+    public function setLootCapacity(int $lootCapacity)
+    {
+        $this->lootCapacity = $lootCapacity;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEta(): int
+    {
+        return $this->eta;
+    }
+
+    /**
+     * @param int $eta
+     */
+    public function setEta(int $eta)
+    {
+        $this->eta = $eta;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProcessed(): bool
+    {
+        return $this->processed;
+    }
+
+    /**
+     * @param bool $processed
+     */
+    public function setProcessed(bool $processed)
+    {
+        $this->processed = $processed;
+    }
+
+    /**
+     * @return int
+     */
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param int $type
+     */
+    public function setType(int $type)
+    {
+        $this->type = $type;
+    }
 
 }

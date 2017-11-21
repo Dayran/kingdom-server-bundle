@@ -66,6 +66,11 @@ class Town
     protected $lastTick;
 
     /**
+     * @var Avatar
+     */
+    protected $avatar;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -182,6 +187,22 @@ class Town
         return $this->getBuildings()->filter(function (TownLog $log) {
             return $log->getTtc() > time();
         });
+    }
+
+    /**
+     * @return Avatar
+     */
+    public function getAvatar(): ?Avatar
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param Avatar $avatar
+     */
+    public function setAvatar(Avatar $avatar)
+    {
+        $this->avatar = $avatar;
     }
 
 }

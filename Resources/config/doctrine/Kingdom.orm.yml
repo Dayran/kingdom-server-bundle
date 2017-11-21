@@ -16,3 +16,5 @@ Kori\KingdomServerBundle\Entity\Kingdom:
     governors:
       targetEntity: Account
       mappedBy: Kingdom
+  lifecycleCallbacks:
+    postLoad: [ onPostLoad ]

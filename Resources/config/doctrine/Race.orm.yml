@@ -1,0 +1,11 @@
+Kori\KingdomServerBundle\Entity\Race:
+  type: entity
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+#add units

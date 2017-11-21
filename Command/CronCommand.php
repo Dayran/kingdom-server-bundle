@@ -49,7 +49,7 @@ class CronCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get('kori_kingdom.server_manager');
+        $output->writeln(sprintf("Processed total of %d activities across all servers.", $this->getContainer()->get('kori_kingdom.activity_manager')->process()));
     }
 
 }

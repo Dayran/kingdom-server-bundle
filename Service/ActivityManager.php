@@ -27,7 +27,69 @@
 namespace Kori\KingdomServerBundle\Service;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Kori\KingdomServerBundle\Activity\ActivityInterface;
+use Kori\KingdomServerBundle\Entity\ActivityLog;
+
+/**
+ * Class ActivityManager
+ * @package Kori\KingdomServerBundle\Service
+ */
 final class ActivityManager
 {
+    /**
+     * @var Collection
+     */
+    protected $activities;
 
+    /**
+     * @var array
+     */
+    protected $servers;
+
+    public function __construct(ServerManager $serverManager)
+    {
+        $this->activities = new ArrayCollection();
+        $this->servers = $serverManager->getServers();
+    }
+
+    /**
+     * @param ActivityInterface $activity
+     * @return bool
+     */
+    public function addActivity(ActivityInterface $activity): bool
+    {
+        if(!$this->activities->contains($activity)) {
+            $this->activities->add($activity);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function process(): int
+    {
+        $processed = 0;
+
+        $this->activities->filter(function (ActivityInterface $activity) use(&$processed) {
+            foreach($this->servers as $server)
+            {
+                if($server instanceof Server && $server->canTrigger($activity))
+                {
+                    $activity->trigger($server);
+                    $log = new ActivityLog();
+                    $log->setActivity(get_class($activity));
+                    $log->getCreatedAt();
+                    $processed++;
+                    $server->getEntityManager()->persist($log);
+                    $server->getEntityManager()->flush();
+                }
+            }
+        });
+
+        return $processed;
+    }
 }
