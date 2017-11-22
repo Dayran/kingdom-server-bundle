@@ -46,6 +46,7 @@ use Kori\KingdomServerBundle\Repository\FieldRepository;
 use Kori\KingdomServerBundle\Repository\MessageRepository;
 use Kori\KingdomServerBundle\Rules\AttackRuleInterface;
 use Kori\KingdomServerBundle\Rules\BuildRuleInterface;
+use Kori\KingdomServerBundle\Rules\InfluenceRuleInterface;
 
 /**
  * Class Server
@@ -78,6 +79,11 @@ final class Server
      * @var AttackRuleInterface
      */
     protected $attackRule;
+
+    /**
+     * @var InfluenceRuleInterface
+     */
+    protected $influenceRule;
 
     /**
      * @var EffectManager
@@ -166,6 +172,22 @@ final class Server
     public function setAttackRule(AttackRuleInterface $attackRule)
     {
         $this->attackRule = $attackRule;
+    }
+
+    /**
+     * @return InfluenceRuleInterface
+     */
+    public function getInfluenceRule(): InfluenceRuleInterface
+    {
+        return $this->influenceRule;
+    }
+
+    /**
+     * @param InfluenceRuleInterface $influenceRule
+     */
+    public function setInfluenceRule(InfluenceRuleInterface $influenceRule)
+    {
+        $this->influenceRule = $influenceRule;
     }
 
     /**

@@ -57,13 +57,14 @@ class SetupCommand extends test
         $ruleManager = new RuleManager();
         $ruleManager->addBuildRule(new \Kori\KingdomServerBundle\Rules\Build\Basic());
         $ruleManager->addAttackRule(new \Kori\KingdomServerBundle\Rules\Attack\Basic());
+        $ruleManager->addInfluenceRule(new \Kori\KingdomServerBundle\Rules\Influence\Standard());
 
         $entityManager = new \mock\Doctrine\ORM\EntityManager();
         $serverManager = new ServerManager(["my_server" => [
             "rate" => 1,
             "db_connection" => $entityManager,
             "days_of_protection" => 7,
-            "rules" => ["build" => ["basic"], "attack" => "basic"]
+            "rules" => ["build" => ["basic"], "attack" => "basic", "influence" => "standard"]
         ]], [], $ruleManager, new EffectManager());
 
         $container = new \mock\Symfony\Component\DependencyInjection\ContainerInterface();

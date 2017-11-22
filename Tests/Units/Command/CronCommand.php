@@ -50,12 +50,13 @@ class CronCommand extends test
         $ruleManager = new RuleManager();
         $ruleManager->addBuildRule(new \Kori\KingdomServerBundle\Rules\Build\Basic());
         $ruleManager->addAttackRule(new \Kori\KingdomServerBundle\Rules\Attack\Basic());
+        $ruleManager->addInfluenceRule(new \Kori\KingdomServerBundle\Rules\Influence\Standard());
 
         $serverManager = new ServerManager(["my_server" => [
             "rate" => 1,
             "db_connection" => $entityManager,
             "days_of_protection" => 7,
-            "rules" => ["build" => ["basic"], "attack" => "basic"]
+            "rules" => ["build" => ["basic"], "attack" => "basic", "influence" => "standard"]
         ]], [], $ruleManager, new EffectManager());
 
         $activityManager = new ActivityManager($serverManager);

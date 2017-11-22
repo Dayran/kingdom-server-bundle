@@ -90,6 +90,7 @@ final class ServerManager
             $server->setBuildRules($buildRules);
 
             $server->setAttackRule($this->ruleManager->getAttackRule($config['rules']['attack'] ?? $this->defaultRules['attack']));
+            $server->setInfluenceRule($this->ruleManager->getInfluenceRule($config['rules']['influence'] ?? $this->defaultRules['influence']));
             //End Add rules
             $server->setEffectManager($this->effectManager);
 

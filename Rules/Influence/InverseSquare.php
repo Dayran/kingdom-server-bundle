@@ -24,33 +24,21 @@
  *
  */
 
-namespace Kori\KingdomServerBundle\DependencyInjection;
+namespace Kori\KingdomServerBundle\Rules\Influence;
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class KoriKingdomServerExtension extends Extension
+use Kori\KingdomServerBundle\Entity\Field;
+use Kori\KingdomServerBundle\Rules\InfluenceRuleInterface;
+
+class InverseSquare implements InfluenceRuleInterface
 {
-    public function load(array $configs, ContainerBuilder $container)
+
+    public function factor(Field $from, Field $to): float
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
-        $loader->load('basic_rules.yml');
-
-        $defaultRules = [
-            "build" => ["basic"],
-            "attack" => "basic",
-            "influence" => "inversesquare"
-        ];
-        $configDefaultRules = array_merge($config['default_rules'], $defaultRules);
-        $container->setParameter("kori_kingdom.default_rules", $configDefaultRules);
-
-        $container->setParameter('kori_kingdom.servers', $config['servers']);
+        $distance = sqrt(pow($to->getPosX() - $from->getPosX(), 2) + pow($to->getPosY() - $from->getPosY(), 2));
+        if($distance == 0)
+            $distance = 1;
+        return 100 * 1/pow($distance, 2);
     }
 
 }

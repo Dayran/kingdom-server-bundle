@@ -46,6 +46,7 @@ class Configuration implements ConfigurationInterface
                         ->isRequired()
                         ->end()
                         ->scalarNode('attack')->isRequired()->end()
+                        ->scalarNode('influence')->isRequired()->end()
                     ->end()
                 ->end()
             ->end();
@@ -71,6 +72,7 @@ class Configuration implements ConfigurationInterface
                                     ->arrayNode('build')
                                     ->end()
                                     ->scalarNode('attack')->end()
+                                    ->scalarNode('influence')->end()
                                 ->end()
                             ->end()
                         ->end()

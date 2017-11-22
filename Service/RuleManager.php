@@ -27,6 +27,7 @@
 namespace Kori\KingdomServerBundle\Service;
 use Kori\KingdomServerBundle\Rules\AttackRuleInterface;
 use Kori\KingdomServerBundle\Rules\BuildRuleInterface;
+use Kori\KingdomServerBundle\Rules\InfluenceRuleInterface;
 
 
 /**
@@ -45,6 +46,11 @@ final class RuleManager
      * @var array
      */
     protected $attackRules = [];
+
+    /**
+     * @var array
+     */
+    protected $influenceRules = [];
 
     /**
      * Adds a build rule to the pool
@@ -112,6 +118,40 @@ final class RuleManager
     public function getAttackRules(): array
     {
         return $this->attackRules;
+    }
+
+    /**
+     * Adds a influence rule to the pool
+     *
+     * @param InfluenceRuleInterface $influenceRule
+     * @return bool
+     */
+    public function addInfluenceRule(InfluenceRuleInterface $influenceRule): bool
+    {
+        $className = get_class($influenceRule);
+        if(!array_key_exists($className, $this->influenceRules))
+        {
+            $this->influenceRules[$className] = $influenceRule;
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string $name
+     * @return InfluenceRuleInterface|null
+     */
+    public function getInfluenceRule(string $name): ?InfluenceRuleInterface
+    {
+        return $this->retrieveByNameFromArray($this->influenceRules, $name);
+    }
+
+    /**
+     * @return array
+     */
+    public function getInfluenceRules(): array
+    {
+        return $this->influenceRules;
     }
 
     /**

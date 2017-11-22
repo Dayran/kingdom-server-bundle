@@ -24,30 +24,29 @@
  *
  */
 
-namespace Kori\KingdomServerBundle;
+namespace Kori\KingdomServerBundle\DependencyInjection\Compiler;
 
-
-use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddActivityCompilerPass;
-use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddAttackRuleCompilerPass;
-use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddBuildRuleCompilerPass;
-use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddEffectRuleCompilerPass;
-use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddGeneratorCompilerPass;
-use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddInfluenceRuleCompilerPass;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class KoriKingdomServerBundle extends Bundle
+
+/**
+ * Class AddInfluenceRuleCompilerPass
+ * @package Kori\KingdomServerBundle\DependencyInjection\Compiler
+ */
+class AddInfluenceRuleCompilerPass implements CompilerPassInterface
 {
+
     /**
-     * @param ContainerBuilder $container
+     * {@inheritdoc}
      */
-    public function build(ContainerBuilder $container)
+    public function process(ContainerBuilder $container)
     {
-        $container->addCompilerPass(new AddGeneratorCompilerPass());
-        $container->addCompilerPass(new AddBuildRuleCompilerPass());
-        $container->addCompilerPass(new AddAttackRuleCompilerPass());
-        $container->addCompilerPass(new AddActivityCompilerPass());
-        $container->addCompilerPass(new AddEffectRuleCompilerPass());
-        $container->addCompilerPass(new AddInfluenceRuleCompilerPass());
+        $manger = $container->getDefinition('kori_kingdom.rule_manager');
+
+        foreach ($container->findTaggedServiceIds('kori_kingdom.influence_rule') as $name => $option) {
+            if (!$manger->addMethodCall('addInfluenceRule', [$container->getDefinition($name)]))
+                @trigger_error("The influence rule is already registered in the system");
+        }
     }
 }

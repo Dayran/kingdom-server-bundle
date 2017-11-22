@@ -7,3 +7,7 @@ services:
     resource: '../../Rules/Attack/*'
     tags:
       - { name: kori_kingdom.attack_rule }
+  Kori\KingdomServerBundle\Rules\Influence\:
+    resource: '../../Rules/Influence/*'
+    tags:
+      - { name: kori_kingdom.influence_rule }

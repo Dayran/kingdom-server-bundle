@@ -26,6 +26,7 @@ Because there is no lobby account logic in this bundle there will be no sitter/d
         - [x] Build rule
         - [X] Attack rule
         - [x] Effect rule
+        - [x] Influence rule
     - [x] Events
     - [x] Chat
     - [ ] Building
@@ -38,7 +39,7 @@ Because there is no lobby account logic in this bundle there will be no sitter/d
     - [x] Consumables
     - [ ] Treasures
     - [ ] Kingdom
-        - [ ] Influence
+        - [x] Influence
         - [ ] Kings and Governors
  * [ ] Tests
  
