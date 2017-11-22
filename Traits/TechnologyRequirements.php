@@ -57,7 +57,7 @@ trait TechnologyRequirements
     /**
      * @param Technology $technology
      */
-    public function addBuildingRequirement(Technology $technology)
+    public function addTechnologyRequirement(Technology $technology)
     {
         if(!$this->getTechnologyRequirements()->contains($technology))
             $this->getTechnologyRequirements()->add($technology);
