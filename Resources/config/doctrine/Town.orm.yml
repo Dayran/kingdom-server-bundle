@@ -17,3 +17,10 @@ Kori\KingdomServerBundle\Entity\Town:
       joinColumn:
         name: field_id
         referencedColumnName: id
+  manyToOne:
+    account:
+      targetEntity: Account
+      inversedBy: towns
+      joinColumn:
+        name: account_id
+        referencedColumnName: id

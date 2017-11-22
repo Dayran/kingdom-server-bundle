@@ -25,6 +25,8 @@
  */
 
 namespace Kori\KingdomServerBundle\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class Account
@@ -72,6 +74,11 @@ class Account
      * @var Avatar
      */
     protected $avatar;
+
+    /**
+     * @var Collection
+     */
+    protected $towns;
 
     /**
      * @return int
@@ -199,6 +206,22 @@ class Account
     public function setAvatar(Avatar $avatar)
     {
         $this->avatar = $avatar;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTowns(): Collection
+    {
+        return $this->towns?: $this->towns = new ArrayCollection();
+    }
+
+    /**
+     * @param Collection $towns
+     */
+    public function setTowns(Collection $towns)
+    {
+        $this->towns = $towns;
     }
 
 }

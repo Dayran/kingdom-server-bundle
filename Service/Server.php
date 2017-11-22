@@ -38,12 +38,14 @@ use Kori\KingdomServerBundle\Entity\Consumable;
 use Kori\KingdomServerBundle\Entity\ConsumablesEffect;
 use Kori\KingdomServerBundle\Entity\Field;
 use Kori\KingdomServerBundle\Entity\Message;
+use Kori\KingdomServerBundle\Entity\Quest;
 use Kori\KingdomServerBundle\Entity\Race;
 use Kori\KingdomServerBundle\Entity\ServerStats;
 use Kori\KingdomServerBundle\Entity\Town;
 use Kori\KingdomServerBundle\Repository\AccountRepository;
 use Kori\KingdomServerBundle\Repository\FieldRepository;
 use Kori\KingdomServerBundle\Repository\MessageRepository;
+use Kori\KingdomServerBundle\Repository\QuestRepository;
 use Kori\KingdomServerBundle\Rules\AttackRuleInterface;
 use Kori\KingdomServerBundle\Rules\BuildRuleInterface;
 use Kori\KingdomServerBundle\Rules\InfluenceRuleInterface;
@@ -235,6 +237,14 @@ final class Server
     }
 
     /**
+     * @return QuestRepository
+     */
+    public function getQuestManager(): QuestRepository
+    {
+        return $this->getEntityManager()->getRepository(Quest::class);
+    }
+
+    /**
      * @param string $name
      * @return ServerStats
      */
@@ -331,6 +341,8 @@ final class Server
         //$this->em->flush();
 
         //@todo handle battles
+
+        $this->getQuestManager()->process($town->getAccount());
     }
 
     /**
