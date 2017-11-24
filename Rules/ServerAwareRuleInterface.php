@@ -24,33 +24,22 @@
  *
  */
 
-namespace Kori\KingdomServerBundle\DependencyInjection\Compiler;
+namespace Kori\KingdomServerBundle\Rules;
 
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+
+use Kori\KingdomServerBundle\Service\Server;
 
 /**
- * Class AddBuildRuleCompilerPass
- * @package Kori\KingdomServerBundle\DependencyInjection\Compiler
+ * Interface ServerAwareRuleInterface
+ * @package Kori\KingdomServerBundle\Rules
  */
-class AddBuildRuleCompilerPass implements CompilerPassInterface
+interface ServerAwareRuleInterface
 {
 
     /**
-     * {@inheritdoc}
+     * @param Server $server
+     * @return mixed
      */
-    public function process(ContainerBuilder $container)
-    {
-        $manger = $container->getDefinition('kori_kingdom.rule_manager');
+    public function setServer(Server $server);
 
-        foreach ($container->findTaggedServiceIds('kori_kingdom.build_rule') as $name => $option) {
-
-            $definition = $container->getDefinition($name);
-            if($container->getReflectionClass($definition->getClass())->hasMethod('setServer'))
-                $definition->addMethodCall('setServer', [$container->getDefinition('kori_kingdom.server')]);
-
-            if (!$manger->addMethodCall('addBuildRule', [$definition]))
-                @trigger_error("The build rule is already registered in the system");
-        }
-    }
 }

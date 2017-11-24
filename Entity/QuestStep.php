@@ -125,7 +125,6 @@ class QuestStep
         $this->value = $value;
     }
 
-
     /**
      * @return string
      */

@@ -1,0 +1,23 @@
+Kori\KingdomServerBundle\Entity\QuestLog:
+  type: entity
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    createdAt:
+      type: integer
+      options:
+        unsigned: true
+  oneToOne:
+    step:
+      targetEntity: QuestStep
+      joinColumn:
+        name: step_id
+        referencedColumnName: id
+    account:
+      targetEntity: Account
+      joinColumn:
+        name: account_id
+        referencedColumnName: id

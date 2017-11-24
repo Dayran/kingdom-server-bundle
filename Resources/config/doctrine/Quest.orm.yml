@@ -6,3 +6,10 @@ Kori\KingdomServerBundle\Entity\Quest:
       type: integer
       generator:
         strategy: AUTO
+  fields:
+    name:
+      type: string
+  oneToMany:
+    steps:
+      targetEntity: QuestStep
+      mappedBy: quest

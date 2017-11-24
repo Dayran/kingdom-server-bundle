@@ -45,7 +45,12 @@ class AddInfluenceRuleCompilerPass implements CompilerPassInterface
         $manger = $container->getDefinition('kori_kingdom.rule_manager');
 
         foreach ($container->findTaggedServiceIds('kori_kingdom.influence_rule') as $name => $option) {
-            if (!$manger->addMethodCall('addInfluenceRule', [$container->getDefinition($name)]))
+
+            $definition = $container->getDefinition($name);
+            if($container->getReflectionClass($definition->getClass())->hasMethod('setServer'))
+                $definition->addMethodCall('setServer', [$container->getDefinition('kori_kingdom.server')]);
+
+            if (!$manger->addMethodCall('addInfluenceRule', [$definition]))
                 @trigger_error("The influence rule is already registered in the system");
         }
     }

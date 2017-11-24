@@ -43,7 +43,12 @@ class AddEffectRuleCompilerPass implements CompilerPassInterface
         $manger = $container->getDefinition('kori_kingdom.effect_manager');
 
         foreach ($container->findTaggedServiceIds('kori_kingdom.effect_rule') as $name => $option) {
-            if (!$manger->addMethodCall('addEffectRule', [$container->getDefinition($name)]))
+
+            $definition = $container->getDefinition($name);
+            if($container->getReflectionClass($definition->getClass())->hasMethod('setServer'))
+                $definition->addMethodCall('setServer', [$container->getDefinition('kori_kingdom.server')]);
+
+            if (!$manger->addMethodCall('addEffectRule', [$definition]))
                 @trigger_error("The effect rule is already registered in the system");
         }
     }

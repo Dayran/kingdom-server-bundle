@@ -32,6 +32,9 @@ Because there is no lobby account logic in this bundle there will be no sitter/d
     - [ ] Building
     - [ ] Attack
     - [ ] Quest
+       - [x] Steps       
+       - [ ] Awards
+       - [x] Log
     - [ ] Avatar
        - [ ] Stats
        - [x] Look

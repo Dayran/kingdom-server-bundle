@@ -1,0 +1,23 @@
+Kori\KingdomServerBundle\Entity\QuestStep:
+  type: entity
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    requirement:
+      type: string
+    value:
+      type: integer
+      options:
+        unsigned: true
+        nullable: true
+    'type':
+      type: string
+  oneToOne:
+    quest:
+      targetEntity: Quest
+      joinColumn:
+        name: quest_id
+        referencedColumnName: id
