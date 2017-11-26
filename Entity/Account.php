@@ -81,6 +81,11 @@ class Account
     protected $towns;
 
     /**
+     * @var Race
+     */
+    protected $race;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -230,6 +235,14 @@ class Account
     public function setTowns(Collection $towns)
     {
         $this->towns = $towns;
+    }
+
+    /**
+     * @return Race
+     */
+    public function getRace(): Race
+    {
+        return $this->race;
     }
 
 }

@@ -27,6 +27,11 @@ Kori\KingdomServerBundle\Entity\Account:
     avatar:
       targetEntity: Avatar
       mappedBy: account
+    race:
+      targetEntity: Race
+      joinColumn:
+        name: race_id
+        referencedColumnName: id
   manyToOne:
     kingdom:
       targetEntity: Kingdom

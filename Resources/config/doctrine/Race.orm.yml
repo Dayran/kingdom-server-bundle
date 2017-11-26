@@ -8,4 +8,14 @@ Kori\KingdomServerBundle\Entity\Race:
   fields:
     name:
       type: string
-#add units
+  manyToMany:
+    units:
+      targetEntity: Unit
+      joinTable:
+        name: unit_race
+        joinColumns:
+          race_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          unit_id:
+            referencedColumnName: id

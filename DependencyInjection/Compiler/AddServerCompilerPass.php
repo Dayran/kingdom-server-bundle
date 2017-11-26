@@ -48,6 +48,7 @@ class AddServerCompilerPass implements CompilerPassInterface
         $defaultRules = $container->getParameter('kori_kingdom.default_rules');
         $ruleManager = $container->getDefinition('kori_kingdom.rule_manager');
         $effectManager = $container->getDefinition('kori_kingdom.effect_manager');
+        $dispatcher = $container->getDefinition('event_dispatcher');
 
         foreach($container->getParameter('kori_kingdom.servers') as $name => $config)
         {
@@ -55,6 +56,7 @@ class AddServerCompilerPass implements CompilerPassInterface
             $definition->setArguments([new Reference(str_replace('@', '',$config['db_connection'])), $config['rate'], $config['days_of_protection'], $defaultRules]);
             $definition->addMethodCall('setEffectManager', [$effectManager]);
             $definition->addMethodCall('setRuleManager', [$ruleManager]);
+            $definition->addMethodCall('setDispatcher', [$dispatcher]);
 
             $manger->addMethodCall('addServer', [$name, $config['domain'], $definition]);
         }

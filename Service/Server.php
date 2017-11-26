@@ -44,6 +44,8 @@ use Kori\KingdomServerBundle\Entity\Race;
 use Kori\KingdomServerBundle\Entity\ServerStats;
 use Kori\KingdomServerBundle\Entity\Town;
 use Kori\KingdomServerBundle\Entity\Unit;
+use Kori\KingdomServerBundle\Entity\UnitQueue;
+use Kori\KingdomServerBundle\Events;
 use Kori\KingdomServerBundle\Repository\AccountRepository;
 use Kori\KingdomServerBundle\Repository\BattleLogRepository;
 use Kori\KingdomServerBundle\Repository\FieldRepository;
@@ -53,6 +55,8 @@ use Kori\KingdomServerBundle\Repository\UnitRepository;
 use Kori\KingdomServerBundle\Rules\AttackRuleInterface;
 use Kori\KingdomServerBundle\Rules\BuildRuleInterface;
 use Kori\KingdomServerBundle\Rules\InfluenceRuleInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Class Server
@@ -105,6 +109,11 @@ class Server
      * @var RuleManager
      */
     protected $ruleManager;
+
+    /**
+     * @var EventDispatcher
+     */
+    protected $dispatcher;
 
     /**
      * Server constructor.
@@ -278,6 +287,14 @@ class Server
     }
 
     /**
+     * @param EventDispatcher $dispatcher
+     */
+    public function setDispatcher(EventDispatcher $dispatcher)
+    {
+        $this->dispatcher = $dispatcher;
+    }
+
+    /**
      * @param RuleManager $ruleManager
      */
     public function setRuleManager(RuleManager $ruleManager)
@@ -305,16 +322,35 @@ class Server
         $this->getEntityManager()->persist($avatar);
         $this->getEntityManager()->flush();
 
+        if($this->dispatcher != null)
+            $this->dispatcher->dispatch(Events::POST_CONSUME, new GenericEvent($avatar, ['item' => $consumable]));
+
+
         return true;
     }
 
     /**
+     * @param Town $town
      * @param Unit $unit
      * @param int $count
+     * @throws \RuntimeException
+     * @return bool
      */
-    public function train(Unit $unit, int $count)
+    public function train(Town $town, Unit $unit, int $count): bool
     {
+        $units = $town->getAccount()->getRace()->getUnits();
+        if(!$units->contains($unit))
+            throw new \RuntimeException("Attempting to train unit that is not available to the account's race");
 
+        //@todo check if have resource
+        //@todo check building requirement
+        //@todo training rule
+        $trainQueue = new UnitQueue();
+        
+        if($this->dispatcher != null)
+            $this->dispatcher->dispatch(Events::POST_TRAINING, new GenericEvent($trainQueue));
+
+        return true;
     }
 
     /**
@@ -388,6 +424,9 @@ class Server
 
         if($updateQuest)
             $this->getQuestManager()->process($town->getAccount());
+
+        if($this->dispatcher != null)
+            $this->dispatcher->dispatch(Events::POST_TICK, new GenericEvent($town));
     }
 
     /**

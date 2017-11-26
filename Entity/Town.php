@@ -76,6 +76,11 @@ class Town
     protected $units;
 
     /**
+     * @var Collection
+     */
+    protected $unitQueues;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -260,6 +265,22 @@ class Town
         });
 
         return $tu->first();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getUnitQueues(): Collection
+    {
+        return $this->unitQueues?: $this->unitQueues = new ArrayCollection();
+    }
+
+    /**
+     * @param Collection $unitQueues
+     */
+    public function setUnitQueues(Collection $unitQueues)
+    {
+        $this->unitQueues = $unitQueues;
     }
 
 }

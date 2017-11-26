@@ -29,6 +29,10 @@ Kori\KingdomServerBundle\Entity\BattleLog:
         unsigned: true
     processed:
       type: boolean
+    'type':
+      type: string
+      options:
+        length: 20
     attackUnits:
       type: json
       targetEntity: array<BattleLogUnit>

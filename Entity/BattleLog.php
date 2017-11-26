@@ -38,6 +38,12 @@ use Kori\KingdomServerBundle\Traits\TimeCost;
 class BattleLog
 {
 
+    const SCOUT = "scout";
+    const REINFORCEMENT = "reinforcement";
+    const ATTACK = "attack";
+    const RAID = "raid";
+    const SIEGE = "siege";
+
     use Resources;
     use TimeCost;
 
@@ -87,7 +93,7 @@ class BattleLog
     protected $processed = false;
 
     /**
-     * @var int
+     * @var string
      */
     protected $type;
 
@@ -228,17 +234,17 @@ class BattleLog
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getType(): int
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * @param int $type
+     * @param string $type
      */
-    public function setType(int $type)
+    public function setType(string $type)
     {
         $this->type = $type;
     }
