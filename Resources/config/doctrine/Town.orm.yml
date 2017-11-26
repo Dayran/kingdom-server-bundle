@@ -41,7 +41,7 @@ Kori\KingdomServerBundle\Entity\Town:
       joinColumn:
         name: account_id
         referencedColumnName: id
-  manyToMany:
+  oneToMany:
     units:
       targetEntity: TownUnits
-      inversedBy: town
+      mappedBy: town

@@ -10,13 +10,14 @@ Kori\KingdomServerBundle\Entity\TownUnits:
       type: integer
       options:
         unsigned: true
-  oneToOne:
+  manyToOne:
     town:
       targetEntity: Town
       inversedBy: units
       joinColumn:
         name: town_id
         referencedColumnName: id
+  oneToOne:
     unit:
       targetEntity: Unit
       joinColumn:
