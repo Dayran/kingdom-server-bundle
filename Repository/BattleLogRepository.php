@@ -54,10 +54,19 @@ class BattleLogRepository extends EntityRepository
      * @param array $units
      * @param bool $sendAvatar
      * @throws \RuntimeException
-     * @return BattleLog
+     * @return BattleLog|null
      */
-    public function createBattle(Town $attacker, Town $defender, int $type, array $units, bool $sendAvatar = false): BattleLog
+    public function createBattle(Town $attacker, Town $defender, int $type, array $units, bool $sendAvatar = false): ?BattleLog
     {
+        if(empty($units) && !$sendAvatar)
+            throw new \RuntimeException("Battle cannot be launched without any unit");
+
+        if($defender->getAccount()->isProtected())
+        {
+            @trigger_error("Attacking protected user");
+            return null;
+        }
+
         $log = new BattleLog();
         $log->setAttackTown($attacker);
         $log->setDefendTown($defender);

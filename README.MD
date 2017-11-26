@@ -32,11 +32,11 @@ Because there is no lobby account logic in this bundle there will be no sitter/d
     - [ ] Building
     - [x] Attack
        - [x] Unit
-        - [x] Stats
-        - [ ] Training
+         - [x] Stats
+         - [ ] Training
        - [x] Battle
-        - [x] Send Hero
-        - [x] Send Troops
+         - [x] Send Hero
+         - [x] Send Troops
     - [ ] Quest
        - [x] Steps       
        - [ ] Awards

@@ -121,6 +121,14 @@ class Account
     }
 
     /**
+     * @return bool
+     */
+    public function isProtected(): bool
+    {
+        return $this->getProtection() > time();
+    }
+
+    /**
      * @return int
      */
     public function getGold(): int

@@ -38,7 +38,7 @@ class SampleBuildingGenerator implements GeneratorInterface
 
     public function getType(): int
     {
-        // TODO: Implement getType() method.
+        return self::BUILDINGS;
     }
 
 }

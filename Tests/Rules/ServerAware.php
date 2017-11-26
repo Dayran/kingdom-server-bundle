@@ -36,12 +36,10 @@ class ServerAware implements ServerAwareRuleInterface, AttackRuleInterface
 {
     public function finalize(BattleLog $battleLog)
     {
-        // TODO: Implement finalize() method.
     }
 
     public function setServer(Server $server)
     {
-        // TODO: Implement setServer() method.
     }
 
 }
