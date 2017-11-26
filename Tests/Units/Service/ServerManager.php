@@ -68,12 +68,16 @@ class ServerManager extends test
             ->and($this->calling($requestStack)->getCurrentRequest = function () use ($request) {
                 return $request;
             })
-            ->and($manager = new TestedModel($config, $defaultRules,$ruleManager,$effectManager))
-            ->when($server = TestedModel::matchDomain($requestStack, $config, $defaultRules,$ruleManager,$effectManager))
+            ->and($this->mockGenerator()->orphanize('__construct'))
+            ->and($this->mockGenerator()->shuntParentClassCalls())
+            ->and($server = new \mock\Kori\KingdomServerBundle\Service\Server())
+            ->and($manager = new TestedModel())
+            ->and($manager->addServer('test', 'server.test.com', $server))
+            ->when($server = TestedModel::matchDomain($requestStack))
             ->then(
                 $this->variable($server)->isNull("Server Manager should fail to retrieve any valid server because domain is not configured.")
             )
-            ->when($server = TestedModel::matchDomain($requestStack, $config, $defaultRules,$ruleManager,$effectManager))
+            ->when($server = TestedModel::matchDomain($requestStack))
             ->then(
                 $this->object($server)->isInstanceOf("Kori\\KingdomServerBundle\\Service\\Server", "Server Manager should return a valid server.")
             )

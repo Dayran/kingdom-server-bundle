@@ -11,6 +11,6 @@ Kori\KingdomServerBundle\Entity\BuildingType:
     uniqueInBase:
       type: boolean
   oneToMany:
-    features:
+    levels:
       targetEntity: BuildingLevel
       mappedBy: buildingType

@@ -81,9 +81,16 @@ final class RuleManager
     /**
      * @return array
      */
-    public function getBuildRules(): array
+    public function getBuildRules(array $filter = []): array
     {
-        return $this->buildRules;
+        if(empty($filter))
+            return $this->buildRules;
+        $rules = [];
+        foreach($filter as $f)
+        {
+            $rules[] = $this->getBuildRule($f);
+        }
+        return $rules;
     }
 
     /**

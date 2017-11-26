@@ -24,27 +24,63 @@
  *
  */
 
-namespace Kori\KingdomServerBundle\DependencyInjection;
+namespace Kori\KingdomServerBundle\Entity;
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class KoriKingdomServerExtension extends Extension
+/**
+ * Class BattleLogUnit
+ * @package Kori\KingdomServerBundle\Model
+ */
+class BattleLogUnit implements \JsonSerializable
 {
-    public function load(array $configs, ContainerBuilder $container)
+
+    /**
+     * @var Unit
+     */
+    protected $type;
+
+    /**
+     * @var int
+     */
+    protected $count;
+
+    /**
+     * @return Unit
+     */
+    public function getType(): Unit
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
-        $loader->load('basic_rules.yml');
-
-        $container->setParameter("kori_kingdom.default_rules", $config['default_rules']);
-
-        $container->setParameter('kori_kingdom.servers', $config['servers']);
+        return $this->type;
     }
 
+    /**
+     * @param Unit $type
+     */
+    public function setType(Unit $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCount(): int
+    {
+        return $this->count;
+    }
+
+    /**
+     * @param int $count
+     */
+    public function setCount(int $count)
+    {
+        $this->count = $count;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'type' => $this->getType()->getId(),
+            'count' => $this->getCount()
+        ];
+    }
 }

@@ -33,6 +33,7 @@ use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddBuildRuleCompilerPa
 use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddEffectRuleCompilerPass;
 use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddGeneratorCompilerPass;
 use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddInfluenceRuleCompilerPass;
+use Kori\KingdomServerBundle\DependencyInjection\Compiler\AddServerCompilerPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -49,5 +50,6 @@ class KoriKingdomServerBundle extends Bundle
         $container->addCompilerPass(new AddActivityCompilerPass());
         $container->addCompilerPass(new AddEffectRuleCompilerPass());
         $container->addCompilerPass(new AddInfluenceRuleCompilerPass());
+        $container->addCompilerPass(new AddServerCompilerPass());
     }
 }

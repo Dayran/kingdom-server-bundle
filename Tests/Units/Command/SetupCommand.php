@@ -29,10 +29,8 @@ namespace Kori\KingdomServerBundle\Tests\Units\Command;
 use atoum\test;
 use Kori\KingdomServerBundle\Command\SetupCommand as TestedCommand;
 use Kori\KingdomServerBundle\Entity\ServerStats;
-use Kori\KingdomServerBundle\Service\EffectManager;
 use Kori\KingdomServerBundle\Service\GeneratorManager;
 use Kori\KingdomServerBundle\Service\RuleManager;
-use Kori\KingdomServerBundle\Service\ServerManager;
 use Kori\KingdomServerBundle\Tests\Generators\BuildingGenerator;
 use Kori\KingdomServerBundle\Tests\Generators\CustomWorldGenerator;
 use Kori\KingdomServerBundle\Tests\Generators\RaceGenerator;
@@ -60,12 +58,16 @@ class SetupCommand extends test
         $ruleManager->addInfluenceRule(new \Kori\KingdomServerBundle\Rules\Influence\Standard());
 
         $entityManager = new \mock\Doctrine\ORM\EntityManager();
-        $serverManager = new ServerManager(["my_server" => [
-            "rate" => 1,
-            "db_connection" => $entityManager,
-            "days_of_protection" => 7,
-            "rules" => ["build" => ["basic"], "attack" => "basic", "influence" => "standard"]
-        ]], [], $ruleManager, new EffectManager());
+        $serverManager = new \mock\Kori\KingdomServerBundle\Service\ServerManager();
+        $this->mockGenerator()->orphanize('__construct');
+        $this->mockGenerator()->shuntParentClassCalls();
+        $server = new \mock\Kori\KingdomServerBundle\Service\Server();
+        $this->calling($server)->getEntityManager = function() use($entityManager) {
+            return $entityManager;
+        };
+        $this->calling($serverManager)->getServer = function() use($server) {
+            return $server;
+        };
 
         $container = new \mock\Symfony\Component\DependencyInjection\ContainerInterface();
         $this->calling($container)->get = function ($v) use($generatorManager, $serverManager)  {

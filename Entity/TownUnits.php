@@ -24,27 +24,89 @@
  *
  */
 
-namespace Kori\KingdomServerBundle\DependencyInjection;
+namespace Kori\KingdomServerBundle\Entity;
 
-use Symfony\Component\Config\FileLocator;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-
-class KoriKingdomServerExtension extends Extension
+/**
+ * Class TownUnits
+ * @package Kori\KingdomServerBundle\Entity
+ */
+class TownUnits
 {
-    public function load(array $configs, ContainerBuilder $container)
+
+    /**
+     * @var int
+     */
+    protected $id;
+
+    /**
+     * @var Town
+     */
+    protected $town;
+
+    /**
+     * @var Unit
+     */
+    protected $unit;
+
+    /**
+     * @var int
+     */
+    protected $count = 0;
+
+    /**
+     * @return int
+     */
+    public function getId(): int
     {
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
+        return $this->id;
+    }
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
-        $loader->load('services.yml');
-        $loader->load('basic_rules.yml');
+    /**
+     * @return Town
+     */
+    public function getTown(): Town
+    {
+        return $this->town;
+    }
 
-        $container->setParameter("kori_kingdom.default_rules", $config['default_rules']);
+    /**
+     * @param Town $town
+     */
+    public function setTown(Town $town)
+    {
+        $this->town = $town;
+    }
 
-        $container->setParameter('kori_kingdom.servers', $config['servers']);
+    /**
+     * @return Unit
+     */
+    public function getUnit(): Unit
+    {
+        return $this->unit;
+    }
+
+    /**
+     * @param Unit $unit
+     */
+    public function setUnit(Unit $unit)
+    {
+        $this->unit = $unit;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCount(): int
+    {
+        return $this->count;
+    }
+
+    /**
+     * @param int $count
+     */
+    public function setCount(int $count)
+    {
+        $this->count = $count;
     }
 
 }

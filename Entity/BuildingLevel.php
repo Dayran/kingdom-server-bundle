@@ -94,7 +94,32 @@ class BuildingLevel
     /**
      * @var int
      */
+    protected $storeClay = 0;
+
+    /**
+     * @var int
+     */
+    protected $storeIron = 0;
+
+    /**
+     * @var int
+     */
+    protected $storeWheat = 0;
+
+    /**
+     * @var int
+     */
+    protected $storeWood = 0;
+
+    /**
+     * @var int
+     */
     protected $merchants = 0;
+
+    /**
+     * @var int
+     */
+    protected $level;
 
     /**
      * @return int
@@ -254,6 +279,86 @@ class BuildingLevel
     public function setMerchants(int $merchants)
     {
         $this->merchants = $merchants;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStoreClay(): int
+    {
+        return $this->storeClay;
+    }
+
+    /**
+     * @param int $storeClay
+     */
+    public function setStoreClay(int $storeClay)
+    {
+        $this->storeClay = $storeClay;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStoreIron(): int
+    {
+        return $this->storeIron;
+    }
+
+    /**
+     * @param int $storeIron
+     */
+    public function setStoreIron(int $storeIron)
+    {
+        $this->storeIron = $storeIron;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStoreWheat(): int
+    {
+        return $this->storeWheat;
+    }
+
+    /**
+     * @param int $storeWheat
+     */
+    public function setStoreWheat(int $storeWheat)
+    {
+        $this->storeWheat = $storeWheat;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStoreWood(): int
+    {
+        return $this->storeWood;
+    }
+
+    /**
+     * @param int $storeWood
+     */
+    public function setStoreWood(int $storeWood)
+    {
+        $this->storeWood = $storeWood;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param int $level
+     */
+    public function setLevel(int $level)
+    {
+        $this->level = $level;
     }
 
 }

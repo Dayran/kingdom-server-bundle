@@ -27,7 +27,9 @@
 namespace Kori\KingdomServerBundle\Entity;
 
 
-use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Kori\KingdomServerBundle\Traits\Resources;
+use Kori\KingdomServerBundle\Traits\TimeCost;
 
 /**
  * Class BattleLog
@@ -35,6 +37,9 @@ use Doctrine\Common\Collections\Collection;
  */
 class BattleLog
 {
+
+    use Resources;
+    use TimeCost;
 
     /**
      * @var int
@@ -52,9 +57,9 @@ class BattleLog
     protected $defendTown;
 
     /**
-     * @var Collection
+     * @var array
      */
-    protected $attackUnits;
+    protected $attackUnits = [];
 
     /**
      * @var int
@@ -127,17 +132,17 @@ class BattleLog
     }
 
     /**
-     * @return Collection
+     * @return array
      */
-    public function getAttackUnits(): Collection
+    public function getAttackUnits(): array
     {
         return $this->attackUnits;
     }
 
     /**
-     * @param Collection $attackUnits
+     * @param array $attackUnits
      */
-    public function setAttackUnits(Collection $attackUnits)
+    public function setAttackUnits(array $attackUnits)
     {
         $this->attackUnits = $attackUnits;
     }
@@ -236,6 +241,23 @@ class BattleLog
     public function setType(int $type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * @param LifecycleEventArgs $event
+     */
+    public function postLoadHandler(LifecycleEventArgs $event)
+    {
+        $actual = [];
+        foreach($this->getAttackUnits() as $unit)
+        {
+            $obj = new BattleLogUnit();
+            $obj->setCount($unit['count']);
+            $type = $event->getEntityManager()->getRepository(Unit::class)->find($unit['type']);
+            $obj->setType($type);
+            $actual[] = $obj;
+        }
+        $this->setAttackUnits($actual);
     }
 
 }

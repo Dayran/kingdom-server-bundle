@@ -2,21 +2,12 @@ services:
   kori_kingdom.server_manager:
     class: Kori\KingdomServerBundle\Service\ServerManager
     public: true
-    arguments:
-      $config: '%kori_kingdom.servers%'
-      $defaultRules: '%kori_kingdom.default_rules%'
-      $ruleManager: '@kori_kingdom.rule_manager'
-      $effectManager: '@kori_kingdom.effect_manager'
   kori_kingdom.server:
     class: Kori\KingdomServerBundle\Service\Server
     factory: 'kori_kingdom.server_manager:matchDomain'
     public: true
     arguments:
       $requestStack: "@request_stack"
-      $config: '%kori_kingdom.servers%'
-      $defaultRules: '%kori_kingdom.default_rules%'
-      $ruleManager: '@kori_kingdom.rule_manager'
-      $effectManager: '@kori_kingdom.effect_manager'
   kori_kingdom.generator_manager:
     class: Kori\KingdomServerBundle\Service\GeneratorManager
     public: false
@@ -29,4 +20,5 @@ services:
   kori_kingdom.activity_manager:
     class: Kori\KingdomServerBundle\Service\ActivityManager
     public: true
-
+    arguments:
+      $serverManager: "@kori_kingdom.server_manager"

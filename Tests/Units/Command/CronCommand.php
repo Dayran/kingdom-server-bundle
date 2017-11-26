@@ -30,7 +30,6 @@ use atoum\test;
 use Kori\KingdomServerBundle\Activity\Standard\ProcessBattle;
 use Kori\KingdomServerBundle\Command\CronCommand as TestedCommand;
 use Kori\KingdomServerBundle\Service\ActivityManager;
-use Kori\KingdomServerBundle\Service\EffectManager;
 use Kori\KingdomServerBundle\Service\RuleManager;
 use Kori\KingdomServerBundle\Service\ServerManager;
 use Symfony\Component\Console\Application;
@@ -52,12 +51,7 @@ class CronCommand extends test
         $ruleManager->addAttackRule(new \Kori\KingdomServerBundle\Rules\Attack\Basic());
         $ruleManager->addInfluenceRule(new \Kori\KingdomServerBundle\Rules\Influence\Standard());
 
-        $serverManager = new ServerManager(["my_server" => [
-            "rate" => 1,
-            "db_connection" => $entityManager,
-            "days_of_protection" => 7,
-            "rules" => ["build" => ["basic"], "attack" => "basic", "influence" => "standard"]
-        ]], [], $ruleManager, new EffectManager());
+        $serverManager = new ServerManager();
 
         $activityManager = new ActivityManager($serverManager);
         $activityManager->addActivity(new ProcessBattle());

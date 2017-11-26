@@ -61,27 +61,32 @@ class Unit
     /**
      * @var int
      */
-    protected $attack;
+    protected $attack = 0;
 
     /**
      * @var int
      */
-    protected $defenseInfantry;
+    protected $defenseInfantry = 0;
 
     /**
      * @var int
      */
-    protected $defenseCavalry;
+    protected $defenseCavalry = 0;
 
     /**
      * @var int
      */
-    protected $speed;
+    protected $speed = 0;
 
     /**
      * @var bool
      */
-    protected $cavalry;
+    protected $cavalry = false;
+
+    /**
+     * @var int
+     */
+    protected $carry = 0;
 
     /**
      * @return int
@@ -201,6 +206,22 @@ class Unit
     public function setCavalry(bool $cavalry)
     {
         $this->cavalry = $cavalry;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCarry(): int
+    {
+        return $this->carry;
+    }
+
+    /**
+     * @param int $carry
+     */
+    public function setCarry(int $carry)
+    {
+        $this->carry = $carry;
     }
 
 }

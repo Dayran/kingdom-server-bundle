@@ -28,6 +28,7 @@ namespace Kori\KingdomServerBundle\Service;
 
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Kori\KingdomServerBundle\Activity\ActivityInterface;
 use Kori\KingdomServerBundle\Entity\Account;
 use Kori\KingdomServerBundle\Entity\Avatar;
@@ -42,10 +43,13 @@ use Kori\KingdomServerBundle\Entity\Quest;
 use Kori\KingdomServerBundle\Entity\Race;
 use Kori\KingdomServerBundle\Entity\ServerStats;
 use Kori\KingdomServerBundle\Entity\Town;
+use Kori\KingdomServerBundle\Entity\Unit;
 use Kori\KingdomServerBundle\Repository\AccountRepository;
+use Kori\KingdomServerBundle\Repository\BattleLogRepository;
 use Kori\KingdomServerBundle\Repository\FieldRepository;
 use Kori\KingdomServerBundle\Repository\MessageRepository;
 use Kori\KingdomServerBundle\Repository\QuestRepository;
+use Kori\KingdomServerBundle\Repository\UnitRepository;
 use Kori\KingdomServerBundle\Rules\AttackRuleInterface;
 use Kori\KingdomServerBundle\Rules\BuildRuleInterface;
 use Kori\KingdomServerBundle\Rules\InfluenceRuleInterface;
@@ -54,7 +58,7 @@ use Kori\KingdomServerBundle\Rules\InfluenceRuleInterface;
  * Class Server
  * @package Kori\KingdomServerBundle\Service
  */
-final class Server
+class Server
 {
 
     /**
@@ -73,7 +77,12 @@ final class Server
     protected $protectionDays;
 
     /**
-     * @var $buildRules
+     * @var array
+     */
+    protected $rules;
+
+    /**
+     * @var array
      */
     protected $buildRules = [];
 
@@ -93,16 +102,23 @@ final class Server
     protected $effectManager;
 
     /**
+     * @var RuleManager
+     */
+    protected $ruleManager;
+
+    /**
      * Server constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param int $rate
      * @param int $protectionDays
+     * @param array $rules
      */
-    public function __construct(EntityManager $entityManager, int $rate, int $protectionDays)
+    public function __construct(EntityManagerInterface $entityManager, int $rate, int $protectionDays, array $rules)
     {
         $this->em = $entityManager;
         $this->rate = $rate;
         $this->protectionDays = $protectionDays;
+        $this->rules = $rules;
     }
 
     /**
@@ -160,36 +176,11 @@ final class Server
     }
 
     /**
-     * @param array $buildRules
-     * @return void
-     */
-    public function setBuildRules(array $buildRules): void
-    {
-        $this->buildRules = $buildRules;
-    }
-
-    /**
-     * @param AttackRuleInterface $attackRule
-     */
-    public function setAttackRule(AttackRuleInterface $attackRule)
-    {
-        $this->attackRule = $attackRule;
-    }
-
-    /**
      * @return InfluenceRuleInterface
      */
     public function getInfluenceRule(): InfluenceRuleInterface
     {
         return $this->influenceRule;
-    }
-
-    /**
-     * @param InfluenceRuleInterface $influenceRule
-     */
-    public function setInfluenceRule(InfluenceRuleInterface $influenceRule)
-    {
-        $this->influenceRule = $influenceRule;
     }
 
     /**
@@ -245,6 +236,22 @@ final class Server
     }
 
     /**
+     * @return BattleLogRepository
+     */
+    public function getBattleManager(): BattleLogRepository
+    {
+        return $this->getEntityManager()->getRepository(BattleLog::class);
+    }
+
+    /**
+     * @return UnitRepository
+     */
+    public function getUnitManager(): UnitRepository
+    {
+        return $this->getEntityManager()->getRepository(Unit::class);
+    }
+
+    /**
      * @param string $name
      * @return ServerStats
      */
@@ -271,6 +278,17 @@ final class Server
     }
 
     /**
+     * @param RuleManager $ruleManager
+     */
+    public function setRuleManager(RuleManager $ruleManager)
+    {
+        $this->ruleManager = $ruleManager;
+        $this->buildRules = $ruleManager->getBuildRules($this->rules['build']);
+        $this->attackRule = $ruleManager->getAttackRule($this->rules['attack']);
+        $this->influenceRule = $ruleManager->getInfluenceRule($this->rules['influence']);
+    }
+
+    /**
      * @param Avatar $avatar
      * @param Consumable $consumable
      * @param bool $ignoreAway
@@ -291,58 +309,85 @@ final class Server
     }
 
     /**
-     * @param Town $attacker
-     * @param Town $defender
-     * @param int $type
-     * @param array $units
-     * @param bool $sendAvatar
+     * @param Unit $unit
+     * @param int $count
      */
-    public function battle(Town $attacker, Town $defender, int $type, array $units, bool $sendAvatar = false)
+    public function train(Unit $unit, int $count)
     {
-        $log = new BattleLog();
-        $log->setAttackTown($attacker);
-        $log->setDefendTown($defender);
-        $log->setType($type);
 
-        foreach ($units as $unit)
-        {
-            //@todo calculate strength
-        }
-
-        //@todo remove units from attacker
-        //@todo if sending avatar set avatar to be away
-        //$attacker->getAccount()->getAvatar()->setBattleLog($log);
-        //$this->em->persist($log);
-        //$this->em->flush();
     }
 
     /**
-     * Process unprocessed battles server wide
+     * Process unprocessed battles server wide and return number of battles processed
+     * @param array $toProcess Array of battles to process
+     * @param bool $delayInfluence Delays the processing of influence after battle
+     * @return int
      */
-    public function processBattles()
+    public function processBattles(array $toProcess = [], bool $delayInfluence = false): int
     {
-        $query = $this->getEntityManager()->createQuery(sprintf("SELECT b from %s b where b.proccessed is FALSE and b.eta <= %d", BattleLog::class, time()));
-        foreach($query->getResult() as $result)
+        $battles = $toProcess ?? $this->getBattleManager()->getBattlesToProcess();
+
+        for($i = 0; $i < count($battles); $i++)
         {
-            $this->attackRule->finalize($result);
+            $this->attackRule->finalize($battles[$i]);
+            $battles[$i]->setProcessed(true);
+            $this->getEntityManager()->persist($battles[$i]);
+
+            if(!$delayInfluence)
+            {
+               $this->calculateInfluence($battles[$i]->getAttackTown());
+               $this->calculateInfluence($battles[$i]->getDefendTown());
+            }
+
+            //Batch flushing after 20
+            if($i % 20 === 0)
+                $this->getEntityManager()->flush();
         }
+
+        $this->getEntityManager()->flush();
+
+        return count($battles);
     }
 
     /**
      * @param Town $town
      */
-    public function tick(Town $town)
+    public function calculateInfluence(Town $town)
+    {
+
+    }
+
+    /**
+     * Primary update function to process individual town, including resource, battle. Will update influence.
+     * @param Town $town
+     * @param bool $updateQuest
+     * @param bool $updateBattle
+     */
+    public function tick(Town $town, bool $updateQuest = true, bool $updateBattle = true)
     {
         $rates = $town->getGenerateRate();
         $diff = time() - $town->getLastTick();
         //@todo get modifiers
+        $storage = $town->getStorage();
+        $wood = $rates["wood"] * $diff * $this->rate;
+        $iron = $rates["iron"] * $diff * $this->rate;
+        $clay = $rates["clay"] * $diff * $this->rate;
+        $wheat = $rates["wheat"] * $diff * $this->rate;
+
+        $town->setWood(min($town->getWood() + $wood, $storage["wood"]));
+        $town->setIron(min($town->getIron() + $iron, $storage["iron"]));
+        $town->setClay(min($town->getClay() + $clay, $storage["clay"]));
+        $town->setWheat(min($town->getWheat() + $wheat, $storage["wheat"]));
         $town->setLastTick(time());
-        //$this->em->persist($town);
-        //$this->em->flush();
 
-        //@todo handle battles
+        $this->em->persist($town);
+        $this->em->flush();
 
-        $this->getQuestManager()->process($town->getAccount());
+        if($updateBattle)
+            $this->processBattles($this->getBattleManager()->getBattles($town));
+
+        if($updateQuest)
+            $this->getQuestManager()->process($town->getAccount());
     }
 
     /**

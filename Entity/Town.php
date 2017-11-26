@@ -71,6 +71,11 @@ class Town
     protected $avatar;
 
     /**
+     * @var Collection
+     */
+    protected $units;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -166,6 +171,29 @@ class Town
         return $rates;
     }
 
+    /**
+     * @return array
+     */
+    public function getStorage(): array
+    {
+        $storage = [
+            "wood" => 0,
+            "clay" => 0,
+            "iron" => 0,
+            "wheat" => 0
+        ];
+        foreach($this->getBuildings() as $building)
+        {
+            if($building instanceof TownLog)
+            {
+                $storage["wood"] += $building->getBuildingLevel()->getStoreWood();
+                $storage["clay"] += $building->getBuildingLevel()->getStoreClay();
+                $storage["iron"] += $building->getBuildingLevel()->getStoreIron();
+                $storage["wheat"] += $building->getBuildingLevel()->getStoreWheat();
+            }
+        }
+        return $storage;
+    }
 
     /**
      * @param int $position
@@ -203,6 +231,35 @@ class Town
     public function setAvatar(Avatar $avatar)
     {
         $this->avatar = $avatar;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getUnits(): Collection
+    {
+        return $this->units?: $this->units = new ArrayCollection();
+    }
+
+    /**
+     * @param Collection $units
+     */
+    public function setUnits(Collection $units)
+    {
+        $this->units = $units;
+    }
+
+    /**
+     * @param Unit $unit
+     * @return TownUnits|null
+     */
+    public function getUnit(Unit $unit): ?TownUnits
+    {
+        $tu = $this->getUnits()->filter(function (TownUnits $townUnits) use($unit) {
+            return $townUnits->getUnit() === $unit;
+        });
+
+        return $tu->first();
     }
 
 }

@@ -1,0 +1,24 @@
+Kori\KingdomServerBundle\Entity\TownUnits:
+  type: entity
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    count:
+      type: integer
+      options:
+        unsigned: true
+  oneToOne:
+    town:
+      targetEntity: Town
+      inversedBy: units
+      joinColumn:
+        name: town_id
+        referencedColumnName: id
+    unit:
+      targetEntity: Unit
+      joinColumn:
+        name: unit_id
+        referencedColumnName: id

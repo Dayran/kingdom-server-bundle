@@ -1,5 +1,6 @@
 Kori\KingdomServerBundle\Entity\Town:
   type: entity
+  repositoryClass: Kori\KingdomServerBundle\Repository\TownRepository
   id:
     id:
       type: integer
@@ -7,6 +8,22 @@ Kori\KingdomServerBundle\Entity\Town:
         strategy: AUTO
   fields:
     lastTick:
+      type: integer
+      options:
+        unsigned: true
+    wood:
+      type: integer
+      options:
+        unsigned: true
+    wheat:
+      type: integer
+      options:
+        unsigned: true
+    iron:
+      type: integer
+      options:
+        unsigned: true
+    clay:
       type: integer
       options:
         unsigned: true
@@ -24,3 +41,7 @@ Kori\KingdomServerBundle\Entity\Town:
       joinColumn:
         name: account_id
         referencedColumnName: id
+  manyToMany:
+    units:
+      targetEntity: TownUnits
+      inversedBy: town

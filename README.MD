@@ -30,7 +30,13 @@ Because there is no lobby account logic in this bundle there will be no sitter/d
     - [x] Events
     - [x] Chat
     - [ ] Building
-    - [ ] Attack
+    - [x] Attack
+       - [x] Unit
+        - [x] Stats
+        - [ ] Training
+       - [x] Battle
+        - [x] Send Hero
+        - [x] Send Troops
     - [ ] Quest
        - [x] Steps       
        - [ ] Awards
@@ -42,7 +48,7 @@ Because there is no lobby account logic in this bundle there will be no sitter/d
     - [x] Consumables
     - [ ] Treasures
     - [ ] Kingdom
-        - [x] Influence
+        - [ ] Influence
         - [ ] Kings and Governors
  * [ ] Tests
  

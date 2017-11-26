@@ -1,0 +1,53 @@
+Kori\KingdomServerBundle\Entity\Unit:
+  type: entity
+  repositoryClass: Kori\KingdomServerBundle\Repository\UnitRepository
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+    attack:
+      type: integer
+      options:
+        unsigned: true
+    defenseInfantry:
+      type: integer
+      options:
+        unsigned: true
+    defenseCavalry:
+      type: integer
+      options:
+        unsigned: true
+    speed:
+      type: integer
+      options:
+        unsigned: true
+    cavalry:
+      type: boolean
+    timeTaken:
+      type: integer
+      options:
+        unsigned: true
+    wood:
+      type: integer
+      options:
+        unsigned: true
+    wheat:
+      type: integer
+      options:
+        unsigned: true
+    iron:
+      type: integer
+      options:
+        unsigned: true
+    clay:
+      type: integer
+      options:
+        unsigned: true
+    carry:
+      type: integer
+      options:
+        unsigned: true

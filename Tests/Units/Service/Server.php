@@ -68,7 +68,7 @@ class Server extends test
 
         $this
             ->given($entityManager = new \mock\Doctrine\ORM\EntityManager())
-            ->and($server = new TestedModel($entityManager, 1, 7))
+            ->and($server = new TestedModel($entityManager, 1, 7, []))
             ->and($server->setEffectManager($effectManager))
             ->when($result = $server->consume($avatar, $item))
             ->then(

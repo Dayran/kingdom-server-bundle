@@ -25,7 +25,7 @@ Kori\KingdomServerBundle\Entity\Avatar:
       type: integer
     female:
       type: boolean
- oneToOne:
+  oneToOne:
     account:
       targetEntity: Account
       inversedBy: avatar

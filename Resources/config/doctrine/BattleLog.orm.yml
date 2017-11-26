@@ -1,0 +1,47 @@
+Kori\KingdomServerBundle\Entity\BattleLog:
+  type: entity
+  repositoryClass: Kori\KingdomServerBundle\Repository\BattleLogRepository
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    wood:
+      type: integer
+      options:
+        unsigned: true
+    wheat:
+      type: integer
+      options:
+        unsigned: true
+    iron:
+      type: integer
+      options:
+        unsigned: true
+    clay:
+      type: integer
+      options:
+        unsigned: true
+    timeTaken:
+      type: integer
+      options:
+        unsigned: true
+    processed:
+      type: boolean
+    attackUnits:
+      type: json
+      targetEntity: array<BattleLogUnit>
+  oneToOne:
+    attackTown:
+      targetEntity: Town
+      joinColumn:
+        name: attacker_id
+        referencedColumnName: id
+    defendTown:
+      targetEntity: Town
+      joinColumn:
+        name: defender_id
+        referencedColumnName: id
+  lifecycleCallbacks:
+    postLoad: [postLoadHandler]

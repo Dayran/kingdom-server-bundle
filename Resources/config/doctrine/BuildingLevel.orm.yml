@@ -10,6 +10,9 @@ Kori\KingdomServerBundle\Entity\BuildingLevel:
       type: integer
     level:
       type: integer
+      options:
+        length: 3
+        unsigned: true
     positionLimit:
       type: integer
     generateClay:

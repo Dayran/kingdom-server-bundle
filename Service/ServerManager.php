@@ -33,42 +33,28 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Class ServerManager
  * @package Kori\KingdomServerBundle\Service
  */
-final class ServerManager
+class ServerManager
 {
 
     /**
      * @var array
      */
-    protected $config;
+    protected static $servers = [];
 
     /**
      * @var array
      */
-    protected $defaultRules;
+    protected static $domainToName = [];
 
-    /**
-     * @var RuleManager
-     */
-    protected $ruleManager;
-
-    /**
-     * @var EffectManager
-     */
-    protected $effectManager;
-
-    /**
-     * ServerManager constructor.
-     * @param array $config
-     * @param array $defaultRules
-     * @param RuleManager $ruleManager
-     * @param EffectManager $effectManager
-     */
-    public function __construct(array $config, array $defaultRules, RuleManager $ruleManager, EffectManager $effectManager)
+    public function addServer(string $serverName, string $domain, Server $server)
     {
-        $this->config = $config;
-        $this->defaultRules = $defaultRules;
-        $this->ruleManager = $ruleManager;
-        $this->effectManager = $effectManager;
+        if(array_key_exists($serverName, self::$servers))
+            throw new \RuntimeException("Server name is already registered");
+        if(array_key_exists($domain, self::$domainToName))
+            throw new \RuntimeException("Domain is already registered");
+
+        self::$servers[$serverName] = $server;
+        self::$domainToName[$domain] = $serverName;
     }
 
     /**
@@ -77,24 +63,9 @@ final class ServerManager
      */
     public function getServer(string $serverName): ?Server
     {
-        if(array_key_exists($serverName, $this->config))
+        if(array_key_exists($serverName, self::$servers))
         {
-            $config = $this->config[$serverName];
-            $server = new Server($config['db_connection'], $config['rate'], $config['days_of_protection']);
-
-            //Start Add rules
-            $buildRules = [];
-            $buildConfig = $config['rules']['build'] ?? $this->defaultRules['build'];
-            foreach($buildConfig as $name)
-                $buildRules[] = $this->ruleManager->getBuildRule($name);
-            $server->setBuildRules($buildRules);
-
-            $server->setAttackRule($this->ruleManager->getAttackRule($config['rules']['attack'] ?? $this->defaultRules['attack']));
-            $server->setInfluenceRule($this->ruleManager->getInfluenceRule($config['rules']['influence'] ?? $this->defaultRules['influence']));
-            //End Add rules
-            $server->setEffectManager($this->effectManager);
-
-            return $server;
+            return self::$servers[$serverName];
         }
         return null;
     }
@@ -104,31 +75,19 @@ final class ServerManager
      */
     public function getServers(): array
     {
-        $servers = [];
-        foreach(array_keys($this->config) as $name)
-        {
-            $servers[] = $this->getServer($name);
-        }
-        return $servers;
+        return self::$servers;
     }
 
     /**
      * @param RequestStack $requestStack
-     * @param array $config
-     * @param array $defaultRules
-     * @param RuleManager $ruleManager
-     * @param EffectManager $effectManager
      * @return Server|null
      */
-    public static function matchDomain(RequestStack $requestStack, array $config, array $defaultRules, RuleManager $ruleManager, EffectManager $effectManager): ?Server
+    public static function matchDomain(RequestStack $requestStack): ?Server
     {
-        foreach($config as $name => $c)
+        $domain = $requestStack->getCurrentRequest()->getHost();
+        if(array_key_exists($domain, self::$domainToName))
         {
-            if($c["domain"] === $requestStack->getCurrentRequest()->getHost())
-            {
-                $self = new self($config, $defaultRules, $ruleManager, $effectManager);
-                return $self->getServer($name);
-            }
+            return self::$servers[self::$domainToName[$domain]];
         }
         return null;
     }
