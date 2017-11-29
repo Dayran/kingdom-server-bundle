@@ -29,7 +29,7 @@ Because there is no lobby account logic in this bundle there will be no sitter/d
         - [x] Influence rule
     - [x] Events
     - [x] Chat
-    - [ ] Building
+    - [x] Building
     - [x] Attack
        - [x] Unit
          - [x] Stats
@@ -136,6 +136,7 @@ kori_kingdom_server:
     default_rules:
       build: [basic, additional1, ... ]
       attack: standard
+      influence: basic
 ```
 
 To define rules to use for a particular server
@@ -147,6 +148,7 @@ kori_kingdom_server:
        ...
        build: [basic]
        attack: weakbuilding
+       influence: basic
 ```
 
 ### Creating Rules
@@ -203,6 +205,22 @@ services:
 
 > All effect rule must implement the EffectRuleInterface
 
+#### Influence Rule
+
+Influence rule is used to determine the strength factor of influence from the town to determine the spread of kingdom
+
+To register an attack rule add the tag name "kori_kingdom.effect_rule" to the service
+
+```yaml
+# Example
+services:
+  Kori\KingdomServerBundle\Rules\Influence\:
+    resource: '../../Rules/Influence/*'
+    tags:
+      - { name: kori_kingdom.influence_rule }
+```
+
+> All influence rule must implement the InfluenceRuleInterface
 
 ### Events/Activity
 
