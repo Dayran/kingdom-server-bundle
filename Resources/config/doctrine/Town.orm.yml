@@ -45,3 +45,7 @@ Kori\KingdomServerBundle\Entity\Town:
     units:
       targetEntity: TownUnits
       mappedBy: town
+    buildings:
+      targetEntity: TownLog
+      mappedBy: town
+

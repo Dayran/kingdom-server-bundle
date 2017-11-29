@@ -39,9 +39,9 @@ class Basic implements BuildRuleInterface
 {
     public function comply(Town $town, BuildingLevel $buildingLevel, int $position): bool
     {
-        if($buildingLevel->fulfillBuildingRequirements($town->getBuildings()) &&
+        if($town->canBuildPosition($position, $buildingLevel) &&
+            $buildingLevel->fulfillBuildingRequirements($town->getBuildings()) &&
             $buildingLevel->fulfillResourceRequirements($town)
-            //$buildingLevel->fulfillTechnologyRequirements($town->getTechno)
         )
         {
             return true;

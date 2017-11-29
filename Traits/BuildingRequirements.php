@@ -51,6 +51,11 @@ trait BuildingRequirements
      */
     public function setBuildingRequirements(Collection $buildingRequirements)
     {
+        $allPassed = $buildingRequirements->forAll(function($key, $value){
+            return $value instanceof BuildingLevel;
+        });
+        if(!$allPassed)
+            throw new \RuntimeException("Requirements should be a collection of BuildingLevel");
         $this->buildingRequirements = $buildingRequirements;
     }
 

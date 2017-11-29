@@ -65,7 +65,7 @@ class TownLog
     /**
      * @var bool
      */
-    protected $boosted;
+    protected $boosted = false;
 
     /**
      * @var string
@@ -173,7 +173,8 @@ class TownLog
      */
     public function setStatus(string $status)
     {
-        $this->status = $status;
+        if(in_array($status, [self::ACTIVE, self::DESTROYED, self::CLEARED]))
+            $this->status = $status;
     }
 
     /**
@@ -182,6 +183,14 @@ class TownLog
     public function isCompleted(): bool
     {
         return $this->getTtc() <= time() || $this->isBoosted();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isWorking(): bool
+    {
+        return $this->isCompleted() && $this->getStatus() == self::ACTIVE;
     }
 
 }

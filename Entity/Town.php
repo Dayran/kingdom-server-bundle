@@ -202,14 +202,17 @@ class Town
 
     /**
      * @param int $position
+     * @param BuildingLevel $level
      * @return bool
      */
-    public function buildingPositionIsEmpty(int $position): bool
+    public function canBuildPosition(int $position, BuildingLevel $level = null): bool
     {
         $log = $this->getBuildings()->filter(function (TownLog $l) use($position) {
             return $l->getPosition() == $position;
         });
-        return $log->isEmpty();
+        return $log->isEmpty() ||
+            ($level != null &&
+                $log->first()->getBuildingLevel()->getBuildingType() === $level->getBuildingType());
     }
 
     /**

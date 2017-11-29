@@ -43,6 +43,7 @@ use Kori\KingdomServerBundle\Entity\Quest;
 use Kori\KingdomServerBundle\Entity\Race;
 use Kori\KingdomServerBundle\Entity\ServerStats;
 use Kori\KingdomServerBundle\Entity\Town;
+use Kori\KingdomServerBundle\Entity\TownLog;
 use Kori\KingdomServerBundle\Entity\Unit;
 use Kori\KingdomServerBundle\Entity\UnitQueue;
 use Kori\KingdomServerBundle\Events;
@@ -198,15 +199,31 @@ class Server
      * @param Town $town
      * @param BuildingLevel $buildingLevel
      * @param $position
+     * @throws \RuntimeException
      * @return bool
      */
     public function build(Town $town, BuildingLevel $buildingLevel, int $position): bool
     {
+        if(empty($this->buildRules))
+            throw new \RuntimeException("Build rules are empty");
+
         foreach($this->buildRules as $buildRule)
         {
             if($buildRule instanceof BuildRuleInterface && !$buildRule->comply($town, $buildingLevel, $position))
                 return false;
         }
+
+        $log = new TownLog();
+        $log->setBuildingLevel($buildingLevel);
+        $log->setTown($town);
+        $log->setPosition($position);
+        $log->setTtc(time() + $buildingLevel->getTimeTaken());
+
+        $this->getEntityManager()->persist($log);
+        $this->getEntityManager()->flush();
+
+        if($this->dispatcher != null)
+            $this->dispatcher->dispatch(Events::POST_BUID, new GenericEvent($log));
         return true;
     }
 
@@ -300,9 +317,12 @@ class Server
     public function setRuleManager(RuleManager $ruleManager)
     {
         $this->ruleManager = $ruleManager;
-        $this->buildRules = $ruleManager->getBuildRules($this->rules['build']);
-        $this->attackRule = $ruleManager->getAttackRule($this->rules['attack']);
-        $this->influenceRule = $ruleManager->getInfluenceRule($this->rules['influence']);
+        if(array_key_exists("build", $this->rules))
+            $this->buildRules = $ruleManager->getBuildRules($this->rules['build']);
+        if(array_key_exists("attack", $this->rules))
+            $this->attackRule = $ruleManager->getAttackRule($this->rules['attack']);
+        if(array_key_exists("influence", $this->rules))
+            $this->influenceRule = $ruleManager->getInfluenceRule($this->rules['influence']);
     }
 
     /**

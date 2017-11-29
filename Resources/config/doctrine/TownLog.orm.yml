@@ -1,0 +1,36 @@
+Kori\KingdomServerBundle\Entity\TownLog:
+  type: entity
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    ttc:
+      type: integer
+      options:
+        unsigned: true
+    position:
+      type: integer
+      options:
+        unsigned: true
+        length: 2
+    boosted:
+      type: boolean
+    status:
+      type: string
+      options:
+        length: 10
+  manyToOne:
+    town:
+      targetEntity: Town
+      inversedBy: buildings
+      joinColumn:
+        name: town_id
+        referencedColumnName: id
+  oneToOne:
+    buildingLevel:
+      targetEntity: BuildingLevel
+      joinColumn:
+        name: building_level_id
+        referencedColumnName: id

@@ -33,5 +33,6 @@ class Events
     const POST_TRAINING = "post_training";
     const POST_TICK = "post_tick";
     const POST_CONSUME = "post_consume";
+    const POST_BUID = "post_build";
 
 }

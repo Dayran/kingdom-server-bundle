@@ -73,6 +73,16 @@ class ServerManager extends test
             ->and($server = new \mock\Kori\KingdomServerBundle\Service\Server())
             ->and($manager = new TestedModel())
             ->and($manager->addServer('test', 'server.test.com', $server))
+            ->and(
+                $this->exception(function() use($manager, $server) {
+                    $manager->addServer('test', 'server.test.com', $server);
+                })->hasMessage("Server name is already registered", "Should throw an error for repeated server name")
+            )
+            ->and(
+                $this->exception(function() use($manager, $server) {
+                    $manager->addServer('test_2', 'server.test.com', $server);
+                })->hasMessage("Domain is already registered", "Should throw an error for repeated domain")
+            )
             ->when($server = TestedModel::matchDomain($requestStack))
             ->then(
                 $this->variable($server)->isNull("Server Manager should fail to retrieve any valid server because domain is not configured.")
