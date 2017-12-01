@@ -25,14 +25,13 @@
  */
 
 namespace Kori\KingdomServerBundle\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+
 
 /**
- * Class Technology
+ * Class ResearchLog
  * @package Kori\KingdomServerBundle\Entity
  */
-class Technology
+class ResearchLog
 {
 
     /**
@@ -41,19 +40,24 @@ class Technology
     protected $id;
 
     /**
-     * @var string
+     * @var Town
      */
-    protected $name;
+    protected $town;
 
     /**
-     * @var BuildingType
+     * @var TechnologyLevel
      */
-    protected $buildingType;
+    protected $technologyLevel;
 
     /**
-     * @var Collection
+     * @var int
      */
-    protected $levels;
+    protected $ttc;
+
+    /**
+     * @var bool
+     */
+    protected $boosted;
 
     /**
      * @return int
@@ -64,51 +68,76 @@ class Technology
     }
 
     /**
-     * @return string
+     * @return Town
      */
-    public function getName(): string
+    public function getTown(): Town
     {
-        return $this->name;
+        return $this->town;
     }
 
     /**
-     * @param string $name
+     * @param Town $town
      */
-    public function setName(string $name)
+    public function setTown(Town $town)
     {
-        $this->name = $name;
+        $this->town = $town;
     }
 
     /**
-     * @return BuildingType
+     * @return TechnologyLevel
      */
-    public function getBuildingType(): BuildingType
+    public function getTechnologyLevel(): TechnologyLevel
     {
-        return $this->buildingType;
+        return $this->technologyLevel;
     }
 
     /**
-     * @param BuildingType $buildingType
+     * @param TechnologyLevel $technologyLevel
      */
-    public function setBuildingType(BuildingType $buildingType)
+    public function setTechnologyLevel(TechnologyLevel $technologyLevel)
     {
-        $this->buildingType = $buildingType;
+        $this->technologyLevel = $technologyLevel;
     }
 
     /**
-     * @return Collection
+     * @return int
      */
-    public function getLevels(): Collection
+    public function getTtc(): int
     {
-        return $this->levels?: $this->levels = new ArrayCollection();
+        return $this->ttc;
     }
 
     /**
-     * @param Collection $levels
+     * @param int $ttc
      */
-    public function setLevels(Collection $levels)
+    public function setTtc(int $ttc)
     {
-        $this->levels = $levels;
+        $this->ttc = $ttc;
     }
+
+    /**
+     * @return bool
+     */
+    public function isBoosted(): bool
+    {
+        return $this->boosted;
+    }
+
+    /**
+     * @param bool $boosted
+     */
+    public function setBoosted(bool $boosted)
+    {
+        $this->boosted = $boosted;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompleted(): bool
+    {
+        return $this->getTtc() <= time() || $this->isBoosted();
+    }
+
 
 }

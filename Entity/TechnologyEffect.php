@@ -25,15 +25,19 @@
  */
 
 namespace Kori\KingdomServerBundle\Entity;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 
 /**
- * Class Technology
+ * Class TechnologyEffect
  * @package Kori\KingdomServerBundle\Entity
  */
-class Technology
+class TechnologyEffect
 {
+    const WOOD_MULTIPLIER = "wood_multiplier";
+    const CLAY_MULTIPLIER = "clay_multiplier";
+    const IRON_MULTIPLIER = "clay_multiplier";
+    const WHEAT_MULTIPLIER = "wheat_multiplier";
+    const ATTACK_MULTIPLIER = "attack_multiplier";
+    const DEFEND_MULTIPLIER = "defend_multiplier";
 
     /**
      * @var int
@@ -41,19 +45,19 @@ class Technology
     protected $id;
 
     /**
+     * @var TechnologyLevel
+     */
+    protected $technologyLevel;
+
+    /**
      * @var string
      */
-    protected $name;
+    protected $effect;
 
     /**
-     * @var BuildingType
+     * @var float
      */
-    protected $buildingType;
-
-    /**
-     * @var Collection
-     */
-    protected $levels;
+    protected $factor;
 
     /**
      * @return int
@@ -64,51 +68,51 @@ class Technology
     }
 
     /**
+     * @return TechnologyLevel
+     */
+    public function getTechnologyLevel(): TechnologyLevel
+    {
+        return $this->technologyLevel;
+    }
+
+    /**
+     * @param TechnologyLevel $technologyLevel
+     */
+    public function setTechnologyLevel(TechnologyLevel $technologyLevel)
+    {
+        $this->technologyLevel = $technologyLevel;
+    }
+
+    /**
      * @return string
      */
-    public function getName(): string
+    public function getEffect(): string
     {
-        return $this->name;
+        return $this->effect;
     }
 
     /**
-     * @param string $name
+     * @param string $effect
      */
-    public function setName(string $name)
+    public function setEffect(string $effect)
     {
-        $this->name = $name;
+        $this->effect = $effect;
     }
 
     /**
-     * @return BuildingType
+     * @return float
      */
-    public function getBuildingType(): BuildingType
+    public function getFactor(): float
     {
-        return $this->buildingType;
+        return $this->factor;
     }
 
     /**
-     * @param BuildingType $buildingType
+     * @param float $factor
      */
-    public function setBuildingType(BuildingType $buildingType)
+    public function setFactor(float $factor)
     {
-        $this->buildingType = $buildingType;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getLevels(): Collection
-    {
-        return $this->levels?: $this->levels = new ArrayCollection();
-    }
-
-    /**
-     * @param Collection $levels
-     */
-    public function setLevels(Collection $levels)
-    {
-        $this->levels = $levels;
+        $this->factor = $factor;
     }
 
 }

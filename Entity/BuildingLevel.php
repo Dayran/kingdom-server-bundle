@@ -31,7 +31,6 @@ use Doctrine\Common\Collections\Collection;
 use Kori\KingdomServerBundle\Traits\BuildingRequirements;
 use Kori\KingdomServerBundle\Traits\Population;
 use Kori\KingdomServerBundle\Traits\ResourceRequirements;
-use Kori\KingdomServerBundle\Traits\TechnologyRequirements;
 use Kori\KingdomServerBundle\Traits\TimeCost;
 
 /**
@@ -44,7 +43,6 @@ class BuildingLevel
     use Population;
     use BuildingRequirements;
     use ResourceRequirements;
-    use TechnologyRequirements;
 
     /**
      * @var int

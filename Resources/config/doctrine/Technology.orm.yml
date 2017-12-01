@@ -1,0 +1,22 @@
+Kori\KingdomServerBundle\Entity\Technology:
+  repositoryClass: Kori\KingdomServerBundle\Repository\TechnologyRepository
+  type: entity
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+  fields:
+    name:
+      type: string
+  manyToOne:
+    buildingType:
+      targetEntity: BuildingType
+      inversedBy: technologies
+      joinColumn:
+        name: building_type_id
+        referencedColumnName: id
+  oneToMany:
+    levels:
+      targetEntity: TechnologyLevel
+      mappedBy: technology

@@ -42,6 +42,7 @@ use Kori\KingdomServerBundle\Entity\Message;
 use Kori\KingdomServerBundle\Entity\Quest;
 use Kori\KingdomServerBundle\Entity\Race;
 use Kori\KingdomServerBundle\Entity\ServerStats;
+use Kori\KingdomServerBundle\Entity\TechnologyLevel;
 use Kori\KingdomServerBundle\Entity\Town;
 use Kori\KingdomServerBundle\Entity\TownLog;
 use Kori\KingdomServerBundle\Entity\Unit;
@@ -411,6 +412,16 @@ class Server
     public function calculateInfluence(Town $town)
     {
 
+    }
+
+    /**
+     * @param TechnologyLevel $level
+     * @param Town $town
+     * @return bool
+     */
+    public function research(TechnologyLevel $level, Town $town): bool
+    {
+        return false;
     }
 
     /**

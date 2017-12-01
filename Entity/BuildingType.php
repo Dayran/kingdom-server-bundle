@@ -27,6 +27,7 @@
 namespace Kori\KingdomServerBundle\Entity;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
@@ -55,6 +56,11 @@ class BuildingType
      * @var bool
      */
     protected $uniqueInBase = true;
+
+    /**
+     * @var Collection
+     */
+    protected $technologies;
 
     /**
      * @return int
@@ -110,6 +116,22 @@ class BuildingType
     public function setUniqueInBase(bool $uniqueInBase)
     {
         $this->uniqueInBase = $uniqueInBase;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTechnologies(): Collection
+    {
+        return $this->technologies?: $this->technologies = new ArrayCollection();
+    }
+
+    /**
+     * @param Collection $technologies
+     */
+    public function setTechnologies(Collection $technologies)
+    {
+        $this->technologies = $technologies;
     }
 
 }

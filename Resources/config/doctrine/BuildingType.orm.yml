@@ -14,3 +14,6 @@ Kori\KingdomServerBundle\Entity\BuildingType:
     levels:
       targetEntity: BuildingLevel
       mappedBy: buildingType
+    technologies:
+      targetEntity: Technology
+      mappedBy: buildingType
