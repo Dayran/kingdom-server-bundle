@@ -29,7 +29,11 @@ namespace Kori\KingdomServerBundle\Rules;
 
 use Kori\KingdomServerBundle\Entity\Avatar;
 
+/**
+ * Interface EffectRuleInterface
+ * @package Kori\KingdomServerBundle\Rules
+ */
 interface EffectRuleInterface
 {
-    public function apply(Avatar &$avatar, int $type, int $value);
+    public function apply(Avatar &$avatar, int $type, int $value): void;
 }

@@ -34,6 +34,7 @@ use Kori\KingdomServerBundle\Entity\ConsumablesEffect;
 use Kori\KingdomServerBundle\Service\EffectManager;
 use Kori\KingdomServerBundle\Service\RuleManager;
 use Kori\KingdomServerBundle\Service\Server as TestedModel;
+use Kori\KingdomServerBundle\Tests\Rules\MissingRaid;
 use Kori\KingdomServerBundle\Tests\Rules\OrangePot;
 use Kori\KingdomServerBundle\Tests\Rules\RedPot;
 
@@ -160,6 +161,23 @@ class Server extends test
                     ->and($this->mock($entityManager)->call('flush')->exactly(1))
                     ->and($this->mock($dispatcher)->call('dispatch')->exactly(1))
             )
+        ;
+    }
+
+    public function testMissingRule()
+    {
+        $ruleManager = new RuleManager();
+        $ruleManager->addBuildRule(new \Kori\KingdomServerBundle\Rules\Build\Basic());
+        $ruleManager->addAttackRule(new MissingRaid());
+        $ruleManager->addAttackRule(new \Kori\KingdomServerBundle\Rules\Attack\NoBattle());
+        $ruleManager->addInfluenceRule(new \Kori\KingdomServerBundle\Rules\Influence\Standard());
+
+        $this
+            ->given($entityManager = new \mock\Doctrine\ORM\EntityManager())
+            ->and($server = new TestedModel($entityManager, 1, 7, ["build" => ["basic"], "attack" => ["missingraid"], "influence" => "standard"]))
+            ->when($server->setRuleManager($ruleManager))->error("Server attack rules does not cover all battle types")->exists()
+            ->and($server = new TestedModel($entityManager, 1, 7, ["build" => ["basic"], "attack" => ["missingraid", "nobattle"], "influence" => "standard"]))
+            ->when($server->setRuleManager($ruleManager))->error("Server attack rules has multiple coverage of same type")->exists()
         ;
     }
 }

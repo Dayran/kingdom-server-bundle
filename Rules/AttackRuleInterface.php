@@ -29,7 +29,14 @@ namespace Kori\KingdomServerBundle\Rules;
 
 use Kori\KingdomServerBundle\Entity\BattleLog;
 
+/**
+ * Interface AttackRuleInterface
+ * @package Kori\KingdomServerBundle\Rules
+ */
 interface AttackRuleInterface
 {
-    public function finalize(BattleLog $battleLog);
+
+    public function supportType(string $type): bool;
+
+    public function finalize(BattleLog $battleLog): void;
 }

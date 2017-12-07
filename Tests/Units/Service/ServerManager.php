@@ -27,8 +27,6 @@
 namespace Kori\KingdomServerBundle\Tests\Units\Service;
 
 use atoum\test;
-use Kori\KingdomServerBundle\Service\EffectManager;
-use Kori\KingdomServerBundle\Service\RuleManager;
 use Kori\KingdomServerBundle\Service\ServerManager as TestedModel;
 
 class ServerManager extends test
@@ -36,24 +34,6 @@ class ServerManager extends test
 
     public function testProcess()
     {
-        $config = ["test" =>
-            [
-                "domain" => "server.test.com",
-                "db_connection" => new \mock\Doctrine\ORM\EntityManager(),
-                "rate" => 1,
-                "days_of_protection" => 7,
-                "rules" => ["build" => ["basic"], "attack" => "basic", "influence" => "standard"]
-            ]
-        ];
-        $defaultRules = [];
-        
-        $ruleManager = new RuleManager();
-        $ruleManager->addBuildRule(new \Kori\KingdomServerBundle\Rules\Build\Basic());
-        $ruleManager->addAttackRule(new \Kori\KingdomServerBundle\Rules\Attack\Basic());
-        $ruleManager->addInfluenceRule(new \Kori\KingdomServerBundle\Rules\Influence\Standard());
-
-        $effectManager = new EffectManager();
-
         $this
             ->given($requestStack = new \mock\Symfony\Component\HttpFoundation\RequestStack())
             ->and($this->mockGenerator()->orphanize('__construct'))

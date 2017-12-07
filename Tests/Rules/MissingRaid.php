@@ -24,21 +24,23 @@
  *
  */
 
-namespace Kori\KingdomServerBundle\Rules\Attack;
-
-
+namespace Kori\KingdomServerBundle\Tests\Rules;
 use Kori\KingdomServerBundle\Entity\BattleLog;
 use Kori\KingdomServerBundle\Rules\AttackRuleInterface;
 
 /**
- * Class Basic
- * @package Kori\KingdomServerBundle\Rules\Attack
+ * Class MissingRaid
+ * @package Kori\KingdomServerBundle\Tests\Rules
  */
-class Basic implements AttackRuleInterface
+class MissingRaid implements AttackRuleInterface
 {
-    public function finalize(BattleLog $battleLog)
+    public function supportType(string $type): bool
     {
-        // TODO: Implement finalize() method.
+        return $type !== BattleLog::RAID;
     }
 
+    public function finalize(BattleLog $battleLog): void
+    {
+
+    }
 }

@@ -32,7 +32,7 @@ use Kori\KingdomServerBundle\Rules\EffectRuleInterface;
 
 class OrangePot implements EffectRuleInterface
 {
-    public function apply(Avatar &$avatar, int $type, int $value)
+    public function apply(Avatar &$avatar, int $type, int $value): void
     {
         if($type === 0)
         {

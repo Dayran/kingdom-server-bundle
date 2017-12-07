@@ -40,6 +40,6 @@ interface ServerAwareRuleInterface
      * @param Server $server
      * @return mixed
      */
-    public function setServer(Server $server);
+    public function setServer(Server $server): void;
 
 }

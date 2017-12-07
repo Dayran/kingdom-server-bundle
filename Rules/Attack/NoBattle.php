@@ -24,19 +24,28 @@
  *
  */
 
-namespace Kori\KingdomServerBundle\Rules;
+namespace Kori\KingdomServerBundle\Rules\Attack;
 
 
-use Kori\KingdomServerBundle\Entity\Town;
-use Kori\KingdomServerBundle\Entity\Unit;
+use Kori\KingdomServerBundle\Entity\BattleLog;
+use Kori\KingdomServerBundle\Rules\AttackRuleInterface;
 
 /**
- * Interface TrainRuleInterface
- * @package Kori\KingdomServerBundle\Rules
+ * Class Basic
+ * @package Kori\KingdomServerBundle\Rules\Attack
  */
-interface TrainRuleInterface
+class NoBattle implements AttackRuleInterface
 {
 
-    public function canTrain(Town $town, Unit $unit, int $count): bool;
+    public function supportType(string $type): bool
+    {
+        //support all
+        return true;
+    }
+
+    public function finalize(BattleLog $battleLog): void
+    {
+        //does nothing
+    }
 
 }

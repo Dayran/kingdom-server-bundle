@@ -29,6 +29,7 @@ namespace Kori\KingdomServerBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
 use Kori\KingdomServerBundle\Activity\ActivityInterface;
 use Kori\KingdomServerBundle\Entity\Account;
 use Kori\KingdomServerBundle\Entity\Avatar;
@@ -53,7 +54,6 @@ use Kori\KingdomServerBundle\Repository\FieldRepository;
 use Kori\KingdomServerBundle\Repository\MessageRepository;
 use Kori\KingdomServerBundle\Repository\QuestRepository;
 use Kori\KingdomServerBundle\Repository\UnitRepository;
-use Kori\KingdomServerBundle\Rules\AttackRuleInterface;
 use Kori\KingdomServerBundle\Rules\BuildRuleInterface;
 use Kori\KingdomServerBundle\Rules\InfluenceRuleInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -92,9 +92,9 @@ class Server
     protected $buildRules = [];
 
     /**
-     * @var AttackRuleInterface
+     * @var array
      */
-    protected $attackRule;
+    protected $attackRules = [];
 
     /**
      * @var InfluenceRuleInterface
@@ -151,6 +151,7 @@ class Server
      * @param Account $account
      * @param string $ip
      * @return bool
+     * @throws
      */
     public function isBanned(Account $account, string $ip): bool
     {
@@ -167,6 +168,7 @@ class Server
     /**
      * @param Account $account
      * @param string $ip
+     * @throws OptimisticLockException
      */
     public function ban(Account $account, string $ip = '')
     {
@@ -200,6 +202,7 @@ class Server
      * @param BuildingLevel $buildingLevel
      * @param $position
      * @throws \RuntimeException
+     * @throws OptimisticLockException
      * @return bool
      */
     public function build(Town $town, BuildingLevel $buildingLevel, int $position): bool
@@ -320,7 +323,22 @@ class Server
         if(array_key_exists("build", $this->rules))
             $this->buildRules = $ruleManager->getBuildRules($this->rules['build']);
         if(array_key_exists("attack", $this->rules))
-            $this->attackRule = $ruleManager->getAttackRule($this->rules['attack']);
+        {
+            $this->attackRules = $ruleManager->getAttackRules($this->rules['attack']);
+            $i = 0;
+            foreach([BattleLog::ATTACK, BattleLog::RAID, BattleLog::REINFORCEMENT, BattleLog::SCOUT, BattleLog::SIEGE] as $item)
+            {
+                foreach($this->attackRules as $rule) {
+                    if($rule->supportType($item))
+                    {
+                        $i += 1;
+                        continue;
+                    }
+                }
+            }
+            if($i != 5)
+                trigger_error($i > 5? "Server attack rules has multiple coverage of same type" : "Server attack rules does not cover all battle types");
+        }
         if(array_key_exists("influence", $this->rules))
             $this->influenceRule = $ruleManager->getInfluenceRule($this->rules['influence']);
     }
@@ -329,6 +347,7 @@ class Server
      * @param Avatar $avatar
      * @param Consumable $consumable
      * @param bool $ignoreAway
+     * @throws OptimisticLockException
      * @return bool
      */
     public function consume(Avatar $avatar, Consumable $consumable, bool $ignoreAway = false): bool
@@ -377,6 +396,7 @@ class Server
      * Process unprocessed battles server wide and return number of battles processed
      * @param array $toProcess Array of battles to process
      * @param bool $delayInfluence Delays the processing of influence after battle
+     * @throws OptimisticLockException
      * @return int
      */
     public function processBattles(array $toProcess = [], bool $delayInfluence = false): int
@@ -385,14 +405,20 @@ class Server
 
         for($i = 0; $i < count($battles); $i++)
         {
-            $this->attackRule->finalize($battles[$i]);
-            $battles[$i]->setProcessed(true);
-            $this->getEntityManager()->persist($battles[$i]);
-
-            if(!$delayInfluence)
+            foreach($this->attackRules as $attackRule)
             {
-               $this->calculateInfluence($battles[$i]->getAttackTown());
-               $this->calculateInfluence($battles[$i]->getDefendTown());
+                if($attackRule->supportType($battles[$i]->getType()))
+                {
+                    $attackRule->finalize($battles[$i]);
+                    $battles[$i]->setProcessed(true);
+                    $this->getEntityManager()->persist($battles[$i]);
+
+                    if(!$delayInfluence)
+                    {
+                        $this->calculateInfluence($battles[$i]->getAttackTown());
+                        $this->calculateInfluence($battles[$i]->getDefendTown());
+                    }
+                }
             }
 
             //Batch flushing after 20
@@ -418,6 +444,7 @@ class Server
      * @param Town $town
      * @param bool $updateQuest
      * @param bool $updateBattle
+     * @throws OptimisticLockException
      */
     public function tick(Town $town, bool $updateQuest = true, bool $updateBattle = true)
     {

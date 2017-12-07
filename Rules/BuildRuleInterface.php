@@ -30,6 +30,10 @@ namespace Kori\KingdomServerBundle\Rules;
 use Kori\KingdomServerBundle\Entity\BuildingLevel;
 use Kori\KingdomServerBundle\Entity\Town;
 
+/**
+ * Interface BuildRuleInterface
+ * @package Kori\KingdomServerBundle\Rules
+ */
 interface BuildRuleInterface
 {
 

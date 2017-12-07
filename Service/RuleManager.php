@@ -119,12 +119,20 @@ final class RuleManager
         return $this->retrieveByNameFromArray($this->attackRules, $name);
     }
 
+
     /**
      * @return array
      */
-    public function getAttackRules(): array
+    public function getAttackRules(array $filter = []): array
     {
-        return $this->attackRules;
+        if(empty($filter))
+            return $this->attackRules;
+        $rules = [];
+        foreach($filter as $f)
+        {
+            $rules[] = $this->getAttackRule($f);
+        }
+        return $rules;
     }
 
     /**

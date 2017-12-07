@@ -48,7 +48,7 @@ class CronCommand extends test
 
         $ruleManager = new RuleManager();
         $ruleManager->addBuildRule(new \Kori\KingdomServerBundle\Rules\Build\Basic());
-        $ruleManager->addAttackRule(new \Kori\KingdomServerBundle\Rules\Attack\Basic());
+        $ruleManager->addAttackRule(new \Kori\KingdomServerBundle\Rules\Attack\NoBattle());
         $ruleManager->addInfluenceRule(new \Kori\KingdomServerBundle\Rules\Influence\Standard());
 
         $serverManager = new ServerManager();

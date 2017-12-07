@@ -33,7 +33,7 @@ class SampleBuildingGenerator implements GeneratorInterface
 {
     public function generate(Server $server): bool
     {
-        // TODO: Implement generate() method.
+        return false;
     }
 
     public function getType(): int

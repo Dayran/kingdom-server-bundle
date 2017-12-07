@@ -34,11 +34,16 @@ use Kori\KingdomServerBundle\Service\Server;
 
 class ServerAware implements ServerAwareRuleInterface, AttackRuleInterface
 {
-    public function finalize(BattleLog $battleLog)
+    public function supportType(string $type): bool
+    {
+        return true;
+    }
+
+    public function finalize(BattleLog $battleLog): void
     {
     }
 
-    public function setServer(Server $server)
+    public function setServer(Server $server): void
     {
     }
 
