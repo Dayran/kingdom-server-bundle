@@ -68,6 +68,16 @@ class BattleLog
     protected $attackUnits = [];
 
     /**
+     * @var array
+     */
+    protected $casualties = [];
+
+    /**
+     * @var array
+     */
+    protected $informations = [];
+
+    /**
      * @var int
      */
     protected $attackCalvaryStrength;
@@ -248,6 +258,39 @@ class BattleLog
     {
         $this->type = $type;
     }
+
+    /**
+     * @return array
+     */
+    public function getCasualties(): array
+    {
+        return $this->casualties;
+    }
+
+    /**
+     * @param array $casualties
+     */
+    public function setCasualties(array $casualties)
+    {
+        $this->casualties = $casualties;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInformations(): array
+    {
+        return $this->informations;
+    }
+
+    /**
+     * @param array $informations
+     */
+    public function setInformations(array $informations)
+    {
+        $this->informations = $informations;
+    }
+
 
     /**
      * @param LifecycleEventArgs $event
